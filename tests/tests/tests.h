@@ -45,16 +45,6 @@
 #include "FontTest/FontTest.h"
 #include "CurrentLanguageTest/CurrentLanguageTest.h"
 
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_AIRPLAY)
-	#include "ChipmunkTest/cocos2dChipmunkDemo.h"
-#else
-#ifdef AIRPLAYUSECHIPMUNK
-#if	(AIRPLAYUSECHIPMUNK == 1)
-	#include "ChipmunkTest/cocos2dChipmunkDemo.h"
-#endif
-#endif
-#endif // (CC_TARGET_PLATFORM != CC_PLATFORM_AIRPLAY)
-
 enum
 {
     TEST_ACTIONS = 0,

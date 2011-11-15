@@ -67,7 +67,7 @@
       <DisableSpecificWarnings>4244;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libcocos2d.lib;libgles_cm.lib;libBox2d.lib;libchipmunk.lib;libcurl_imp.lib;libCocosDenshion.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcocos2d.lib;libgles_cm.lib;libBox2d.lib;libcurl_imp.lib;libCocosDenshion.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -153,27 +153,6 @@
     <ClCompile Include="..\tests\SpriteTest\SpriteTest.cpp" />
     <ClCompile Include="..\tests\SchedulerTest\SchedulerTest.cpp" />
     <ClCompile Include="..\tests\RenderTextureTest\RenderTextureTest.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\Bounce.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\cocos2dChipmunkDemo.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\drawSpace.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\Joints.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\LogoSmash.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\MagnetsElectric.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\OneWay.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\Planet.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\Player.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\Plink.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\Pump.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\PyramidStack.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\PyramidTopple.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\Query.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\Sensors.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\Simple.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\Springies.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\Tank.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\TheoJansen.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\Tumble.cpp" />
-    <ClCompile Include="..\tests\ChipmunkTest\UnsafeOps.cpp" />
     <ClCompile Include="..\tests\Box2DTest\Box2dTest.cpp" />
     <ClCompile Include="..\tests\Box2DTestBed\Box2dView.cpp" />
     <ClCompile Include="..\tests\Box2DTestBed\GLES-Render.cpp" />
@@ -241,9 +220,6 @@
     <ClInclude Include="..\tests\SpriteTest\SpriteTest.h" />
     <ClInclude Include="..\tests\SchedulerTest\SchedulerTest.h" />
     <ClInclude Include="..\tests\RenderTextureTest\RenderTextureTest.h" />
-    <ClInclude Include="..\tests\ChipmunkTest\ChipmunkDemo.h" />
-    <ClInclude Include="..\tests\ChipmunkTest\cocos2dChipmunkDemo.h" />
-    <ClInclude Include="..\tests\ChipmunkTest\drawSpace.h" />
     <ClInclude Include="..\tests\Box2DTest\Box2dTest.h" />
     <ClInclude Include="..\tests\Box2DTestBed\Box2dView.h" />
     <ClInclude Include="..\tests\Box2DTestBed\GLES-Render.h" />

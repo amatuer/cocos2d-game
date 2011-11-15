@@ -52,16 +52,6 @@ static TestScene* CreateTestScene(int nIdx)
         pScene = new TileMapTestScene(); break;
     case TEST_INTERVAL:
         pScene = new IntervalTestScene(); break;
-    case TEST_CHIPMUNK:
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_AIRPLAY)
-        pScene = new ChipmunkTestScene(); break;
-#else
-#ifdef AIRPLAYUSECHIPMUNK
-#if	(AIRPLAYUSECHIPMUNK == 1)
-        pScene = new ChipmunkTestScene(); break;
-#endif
-#endif
-#endif
     case TEST_LABEL:
         pScene = new AtlasTestScene(); break;
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_AIRPLAY)

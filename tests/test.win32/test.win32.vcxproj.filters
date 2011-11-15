@@ -79,9 +79,6 @@
     <Filter Include="classes\tests\RenderTextureTest">
       <UniqueIdentifier>{6669409b-79c8-48af-83cc-705b3149807c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="classes\tests\ChipmunkTest">
-      <UniqueIdentifier>{472ffce1-9d1f-4d36-931f-5e15dccf0c2e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="classes\tests\Box2dTest">
       <UniqueIdentifier>{00685a5b-e6e1-4feb-acbb-2f42842b9ae9}</UniqueIdentifier>
     </Filter>
@@ -224,69 +221,6 @@
     </ClCompile>
     <ClCompile Include="..\tests\RenderTextureTest\RenderTextureTest.cpp">
       <Filter>classes\tests\RenderTextureTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\Bounce.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\cocos2dChipmunkDemo.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\drawSpace.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\Joints.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\LogoSmash.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\MagnetsElectric.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\OneWay.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\Planet.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\Player.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\Plink.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\Pump.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\PyramidStack.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\PyramidTopple.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\Query.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\Sensors.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\Simple.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\Springies.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\Tank.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\TheoJansen.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\Tumble.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\tests\ChipmunkTest\UnsafeOps.cpp">
-      <Filter>classes\tests\ChipmunkTest</Filter>
     </ClCompile>
     <ClCompile Include="..\tests\Box2DTest\Box2dTest.cpp">
       <Filter>classes\tests\Box2dTest</Filter>
@@ -484,15 +418,6 @@
     </ClInclude>
     <ClInclude Include="..\tests\RenderTextureTest\RenderTextureTest.h">
       <Filter>classes\tests\RenderTextureTest</Filter>
-    </ClInclude>
-    <ClInclude Include="..\tests\ChipmunkTest\ChipmunkDemo.h">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClInclude>
-    <ClInclude Include="..\tests\ChipmunkTest\cocos2dChipmunkDemo.h">
-      <Filter>classes\tests\ChipmunkTest</Filter>
-    </ClInclude>
-    <ClInclude Include="..\tests\ChipmunkTest\drawSpace.h">
-      <Filter>classes\tests\ChipmunkTest</Filter>
     </ClInclude>
     <ClInclude Include="..\tests\Box2DTest\Box2dTest.h">
       <Filter>classes\tests\Box2dTest</Filter>
