@@ -1,395 +1,654 @@
 //
 //  HelloWorldScene.cpp
-//  TileBasedGame
+//  firstbox2d
 //
-//  Created by Clawoo on 8/17/11.
+//  Created by andy on 11-9-28.
 //  Copyright __MyCompanyName__ 2011. All rights reserved.
 //
-#include "stdafx.h"
 #include "HelloWorldScene.h"
-#include "SimpleAudioEngine.h"
-#include <string>
 
-using namespace std;
-using namespace CocosDenshion;
-USING_NS_CC;
+using namespace cocos2d;
 
-CCScene* HelloWorld::scene()
+#define PTM_RATIO 32
+#define FLOOR_HEIGHT 62.0f
+enum 
 {
-	// 'scene' is an autorelease object
-	CCScene *scene = CCScene::node();
+	kTagTileMap = 1,
+	kTagSpriteManager = 1,
+	kTagAnimation1 = 1,
+}; 
+
+HelloWorld::HelloWorld()
+{
+	setIsTouchEnabled( true );
 	
-	// 'layer' is an autorelease object
-	HelloWorld *layer = HelloWorld::node();
+	releasingArm = false;
+	mouseJoint = NULL;
+	currentBullet= 0;
+	bulletBody = NULL;
+	bulletJoint = NULL;
+	gameover = false;
+	//setIsAccelerometerEnabled( true );
+    
+	CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
+	//UXLOG(L"Screen width %0.2f screen height %0.2f",screenSize.width,screenSize.height);
+    
+	// Define the gravity vector.
+	b2Vec2 gravity;
+	gravity.Set(0.0f, -10.0f);
+	
+	// Do we want to let bodies sleep?
+	bool doSleep = true;
+    
+	// Construct a world object, which will hold and simulate the rigid bodies.
+	world = new b2World(gravity, doSleep);
 
-	// add layer as a child to scene
-	scene->addChild(layer);
+// 	b2DebugDraw debug;
+// 	world->SetContinuousPhysics(true);
+// 	world->SetDebugDraw(&debug);
+    
+     
+	
+	// Define the ground body.
+	b2BodyDef groundBodyDef;
+	groundBodyDef.position.Set(0, 0); // bottom-left corner
+	
+	
+	// Call the body factory which allocates memory for the ground body
+	// from a pool and creates the ground box shape (also from a pool).
+	// The body is also added to the world.
+	groundBody = world->CreateBody(&groundBodyDef);
+	
+	// Define the ground box shape.
+	b2PolygonShape groundBox;		
+	
+	// bottom
+	groundBox.SetAsEdge(b2Vec2(0,FLOOR_HEIGHT/PTM_RATIO), b2Vec2(screenSize.width*2.0f/PTM_RATIO,FLOOR_HEIGHT/PTM_RATIO));
+	groundBody->CreateFixture(&groundBox,0);
+	
+	// top
+	groundBox.SetAsEdge(b2Vec2(0,screenSize.height/PTM_RATIO), b2Vec2(screenSize.width*2.0f/PTM_RATIO,screenSize.height/PTM_RATIO));
+	groundBody->CreateFixture(&groundBox,0);
+	
+	// left
+	groundBox.SetAsEdge(b2Vec2(0,screenSize.height/PTM_RATIO), b2Vec2(0,0));
+	groundBody->CreateFixture(&groundBox,0);
+	
+	// right
+//	groundBox.SetAsEdge(b2Vec2(screenSize.width*2.0f/PTM_RATIO,screenSize.height/PTM_RATIO), b2Vec2(screenSize.width*2.0f/PTM_RATIO,0));
+//	groundBody->CreateFixture(&groundBox, 0);
+    
+	
+	//Set up sprite
+	CCSprite *sprite = CCSprite::spriteWithFile("bg.png");
+	sprite->setAnchorPoint(CCPointZero);
+	sprite->setPosition(CCPointMake(0,0));
+	addChild(sprite,-1);
+	
+	sprite = CCSprite::spriteWithFile("catapult_base_2.png");
+	sprite->setAnchorPoint(CCPointZero);
+	sprite->setPosition(CCPointMake(181.0f,FLOOR_HEIGHT));
+	addChild(sprite, 0);
+	
+	sprite = CCSprite::spriteWithFile("squirrel_1.png");
+	sprite->setAnchorPoint(CCPointZero);
+	sprite->setPosition(CCPointMake(18.0f,FLOOR_HEIGHT));
+	addChild(sprite, 0);
+	
+	sprite = CCSprite::spriteWithFile("catapult_base_1.png");
+	sprite->setAnchorPoint(CCPointZero);
+	sprite->setPosition(CCPointMake(181.0f,FLOOR_HEIGHT));
+	addChild(sprite, 9);
+	
+	sprite = CCSprite::spriteWithFile("squirrel_2.png");
+	sprite->setAnchorPoint(CCPointZero);
+	sprite->setPosition(CCPointMake(240.0f,FLOOR_HEIGHT));
+	addChild(sprite, 9);
 
-	HelloWorldHud *hud = HelloWorldHud::node();
-	hud->retain();
-	scene->addChild(hud);
-	layer->setHud(hud);
-	hud->setGameLayer(layer);
+	sprite = CCSprite::spriteWithFile("fg.png");
+	sprite->setAnchorPoint(CCPointZero);
+	addChild(sprite, 10);
+	
 
-	// return the scene
-	return scene;
+	CCMenuItemImage *pCloseItem = CCMenuItemImage::itemFromNormalImage(
+										"CloseNormal.png",
+										"CloseSelected.png",
+										this,
+										menu_selector(HelloWorld::menuCloseCallback) );
+	//pCloseItem->setPosition( ccp(CCDirector::sharedDirector()->getWinSize().width - 20, 20) );
+
+	// create menu, it's an autorelease object
+	CCMenu* pMenu = CCMenu::menuWithItems(pCloseItem, NULL);
+	pMenu->setPosition(  ccp(CCDirector::sharedDirector()->getWinSize().width - 20, 20) );
+	this->addChild(pMenu, 15 ,kTagTileMap);
+
+
+	//Creat arm
+	CCSprite *arm = CCSprite::spriteWithFile("catapult_arm.png");
+	addChild(arm, 1);
+	
+	b2BodyDef armBodyDef;
+	
+	armBodyDef.type = b2_dynamicBody;
+	armBodyDef.linearDamping = 1;
+	armBodyDef.angularDamping = 1;
+	armBodyDef.position.Set(230.0f/PTM_RATIO,(FLOOR_HEIGHT+91.0f)/PTM_RATIO);
+	armBodyDef.userData = arm;
+	armBody = world->CreateBody(&armBodyDef);
+	
+	b2PolygonShape armBox;
+	b2FixtureDef armBoxDef;
+	armBoxDef.shape = &armBox;
+	armBoxDef.density = 0.3f;
+	armBox.SetAsBox(11.0/PTM_RATIO, 91.0f/PTM_RATIO);
+	armFixture = armBody->CreateFixture(&armBoxDef);
+	
+	b2RevoluteJointDef armJointDef;
+	
+	armJointDef.Initialize(groundBody,armBody,b2Vec2(233.0f/PTM_RATIO,FLOOR_HEIGHT/PTM_RATIO));
+	armJointDef.enableMotor = true;
+	armJointDef.enableLimit = true;
+	armJointDef.motorSpeed = -10;
+	armJointDef.lowerAngle = CC_DEGREES_TO_RADIANS(9);
+	armJointDef.upperAngle = CC_DEGREES_TO_RADIANS(75);
+	armJointDef.maxMotorTorque = 700;
+	
+	armJoint = (b2RevoluteJoint*)world->CreateJoint(&armJointDef);
+	
+	bullets = new vector<b2Body*>;
+	targets = new vector<b2Body*>;
+	enemies = new vector<b2Body*>;
+	
+	
+	runAction(CCSequence::actions(CCDelayTime::actionWithDuration(0.5f),
+			  CCCallFunc::actionWithTarget(this, callfunc_selector(HelloWorld::resetGame)),NULL));
+	
+	contactListener = new MyContactListener();
+	world->SetContactListener(contactListener);
+
+	//this->runAction(CCScaleTo::actionWithDuration(1.5f,1.5f));
+	
+	schedule( schedule_selector(HelloWorld::tick) );
 }
 
 HelloWorld::~HelloWorld()
 {
-	CC_SAFE_RELEASE_NULL(_tileMap);
-	CC_SAFE_RELEASE_NULL(_background);
-	CC_SAFE_RELEASE_NULL(_foreground);
-	CC_SAFE_RELEASE_NULL(_player);
-	CC_SAFE_RELEASE_NULL(_meta);
-	CC_SAFE_RELEASE_NULL(_hud);
-	CC_SAFE_RELEASE_NULL(_enemies);
-	CC_SAFE_RELEASE_NULL(_projectiles);
+//	bullets->release();
+	delete bullets;
+	bullets = NULL;
+	delete targets;
+	targets = NULL;
+	delete enemies;
+	enemies = NULL;
+	delete world;
+	world = NULL;
+	
+	//delete m_debugDraw;
 }
 
-// on "init" you need to initialize your instance
-bool HelloWorld::init()
+void HelloWorld::draw()
 {
-	if ( !CCLayer::init() )
-	{
-		return false;
-	}
+	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
+	// Needed states:  GL_VERTEX_ARRAY, 
+	// Unneeded states: GL_TEXTURE_2D, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
+	glDisable(GL_TEXTURE_2D);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	
-	SimpleAudioEngine::sharedEngine()->preloadEffect("pickup.caf");
-	SimpleAudioEngine::sharedEngine()->preloadEffect("hit.caf");
-	SimpleAudioEngine::sharedEngine()->preloadEffect("move.caf");
-	SimpleAudioEngine::sharedEngine()->playBackgroundMusic("TileMap.caf");
+	world->DrawDebugData();
 	
-	_enemies = new CCMutableArray<CCSprite *>;
-	_projectiles = new CCMutableArray<CCSprite *>;
+	// restore default GL states
+	glEnable(GL_TEXTURE_2D);
+	glEnableClientState(GL_COLOR_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
+}
+
+void HelloWorld::createTarget(const char* imageName ,CCPoint position ,CGFloat rotation ,bool isCircle ,bool isStatic ,bool isEnemy)
+{
+	CCSprite *sprite = CCSprite::spriteWithFile(imageName);
+	addChild(sprite, 1);
 	
-	_tileMap = CCTMXTiledMap::tiledMapWithTMXFile("TileMap.tmx");
-    _tileMap->retain();
+	b2BodyDef bodyDef;
+    bodyDef.type = isStatic?b2_staticBody:b2_dynamicBody;
+    bodyDef.position.Set((position.x+sprite->getContentSize().width/2.0f)/PTM_RATIO,
+                         (position.y+sprite->getContentSize().height/2.0f)/PTM_RATIO);
+    bodyDef.angle = CC_DEGREES_TO_RADIANS(rotation);
+    bodyDef.userData = sprite;
+	
+    b2Body *body = world->CreateBody(&bodyDef);
+	
+	b2FixtureDef boxDef;
+	if (isEnemy)
+    {
+        boxDef.userData = (void*)1;
+        enemies->push_back(body);
+    }
+
+    if (isCircle)
+    {
+        b2CircleShape circle;
+        circle.m_radius = sprite->getContentSize().width/2.0f/PTM_RATIO;
+        boxDef.shape = &circle;
+		
+		boxDef.density = 0.5f;
+		body->CreateFixture(&boxDef);
+    }
+    else
+    {
+        b2PolygonShape box;
+        box.SetAsBox(sprite->getContentSize().width/2.0f/PTM_RATIO, sprite->getContentSize().height/2.0f/PTM_RATIO);
+        boxDef.shape = &box;
+		
+		boxDef.density = 0.5f;
+		body->CreateFixture(&boxDef);
+    }
     
-	_background = _tileMap->layerNamed("Background");
-    _background->retain();
+ //   boxDef.density = 0.5f;
+	
+   // body->CreateFixture(&boxDef);
+	
+	targets->push_back(body);
+}
+
+void HelloWorld::createTargets()
+{
+	//[self createTarget:@"brick_2.png" atPosition:CGPointMake(675.0, FLOOR_HEIGTH) rotation:0.0f isCircle:NO isStatic:NO isEnemy:NO];
+    createTarget("brick_2.png",CCPointMake(675.0f, FLOOR_HEIGHT),0.0f,false,false,false);
+	
+	//[self createTarget:@"brick_1.png" atPosition:CGPointMake(741.0, FLOOR_HEIGTH) rotation:0.0f isCircle:NO isStatic:NO isEnemy:NO];
+    createTarget("brick_1.png",CCPointMake(741.0f, FLOOR_HEIGHT),0.0f,false,false,false);
+	
+	//[self createTarget:@"brick_1.png" atPosition:CGPointMake(741.0, FLOOR_HEIGTH+23.0f) rotation:0.0f isCircle:NO isStatic:NO isEnemy:NO];
+    createTarget("brick_1.png",CCPointMake(741.0f, FLOOR_HEIGHT+23.0f),0.0f,false,false,false);
+	
+	//[self createTarget:@"brick_3.png" atPosition:CGPointMake(672.0, FLOOR_HEIGTH+46.0f) rotation:0.0f isCircle:NO isStatic:NO isEnemy:NO];
+    createTarget("brick_3.png",CCPointMake(672.0f, FLOOR_HEIGHT+46.0f),0.0f,false,false,false);
+	
+	//[self createTarget:@"brick_1.png" atPosition:CGPointMake(707.0, FLOOR_HEIGTH+58.0f) rotation:0.0f isCircle:NO isStatic:NO isEnemy:NO];
+    createTarget("brick_1.png",CCPointMake(707.0f, FLOOR_HEIGHT+58.0f),0.0f,false,false,false);
+	
+	//[self createTarget:@"brick_1.png" atPosition:CGPointMake(707.0, FLOOR_HEIGTH+81.0f) rotation:0.0f isCircle:NO isStatic:NO isEnemy:NO];
+    createTarget("brick_1.png",CCPointMake(707.0f, FLOOR_HEIGHT+81.0f),0.0f,false,false,false);
     
-	_foreground = _tileMap->layerNamed("Foreground");
-    _foreground->retain();
+	//[self createTarget:@"head_dog.png" atPosition:CGPointMake(702.0, FLOOR_HEIGTH) rotation:0.0f isCircle:YES isStatic:NO isEnemy:YES];
+    createTarget("head_dog.png",CCPointMake(702.0f, FLOOR_HEIGHT),0.0f,true,false,true);
 	
-	_meta = _tileMap->layerNamed("Meta");
-	_meta->retain();
+	//[self createTarget:@"head_cat.png" atPosition:CGPointMake(680.0, FLOOR_HEIGTH+58.0f) rotation:0.0f isCircle:YES isStatic:NO isEnemy:YES];
+    createTarget("head_cat.png",CCPointMake(680.0f, FLOOR_HEIGHT+58.0f),0.0f,true,false,true);
 	
-	CCTMXObjectGroup *objects = _tileMap->objectGroupNamed("Objects");
-	CCAssert(objects != NULL, "'Objects' object group not found");
+	//[self createTarget:@"head_dog.png" atPosition:CGPointMake(740.0, FLOOR_HEIGTH+58.0f) rotation:0.0f isCircle:YES isStatic:NO isEnemy:YES];
+    createTarget("head_dog.png",CCPointMake(740.0f, FLOOR_HEIGHT+58.0),0.0f,true,false,true);
 	
-	CCStringToStringDictionary *spawnPoint = objects->objectNamed("SpawnPoint");
-	CCAssert(spawnPoint != NULL, "SpawnPoint object not found");
-	int x = spawnPoint->objectForKey("x")->toInt();
-	int y = spawnPoint->objectForKey("y")->toInt();
+    // 2 bricks at the right of the first block
+    //[self createTarget:@"brick_2.png" atPosition:CGPointMake(770.0, FLOOR_HEIGTH) rotation:0.0f isCircle:NO isStatic:NO isEnemy:NO];
+    createTarget("brick_2.png",CCPointMake(770.0f, FLOOR_HEIGHT),0.0f,false,false,false);
 	
-    this->addChild(_tileMap);
+	//[self createTarget:@"brick_2.png" atPosition:CGPointMake(770.0, FLOOR_HEIGTH+46.0f) rotation:0.0f isCircle:NO isStatic:NO isEnemy:NO];
+    createTarget("brick_2.png",CCPointMake(770.0f, FLOOR_HEIGHT+46.0f),0.0f,false,false,false);
+	
+    // The dog between the blocks
+    //[self createTarget:@"head_dog.png" atPosition:CGPointMake(830.0, FLOOR_HEIGTH) rotation:0.0f isCircle:YES isStatic:NO isEnemy:YES];
+    createTarget("head_dog.png",CCPointMake(830.0f, FLOOR_HEIGHT),0.0f,true,false,true);
+	
+    // Second block
+    //[self createTarget:@"brick_platform.png" atPosition:CGPointMake(839.0, FLOOR_HEIGTH) rotation:0.0f isCircle:NO isStatic:YES isEnemy:NO];
+    createTarget("brick_platform.png",CCPointMake(839.0f, FLOOR_HEIGHT),0.0f,false,true,false);
+	
+	//[self createTarget:@"brick_2.png"  atPosition:CGPointMake(854.0, FLOOR_HEIGTH+28.0f) rotation:0.0f isCircle:NO isStatic:NO isEnemy:NO];
+    createTarget("brick_2.png",CCPointMake(854.0f, FLOOR_HEIGHT+28.0f),0.0f,false,false,false);
+	
+	//[self createTarget:@"brick_2.png"  atPosition:CGPointMake(854.0, FLOOR_HEIGTH+28.0f+46.0f) rotation:0.0f isCircle:NO isStatic:NO isEnemy:NO];
+    createTarget("brick_2.png",CCPointMake(854.0f, FLOOR_HEIGHT+28.0f+46.0f),0.0f,false,false,false);
+	
+	//[self createTarget:@"head_cat.png" atPosition:CGPointMake(881.0, FLOOR_HEIGTH+28.0f) rotation:0.0f isCircle:YES isStatic:NO isEnemy:YES];
+    createTarget("head_cat.png",CCPointMake(881.0f, FLOOR_HEIGHT+28.0f),0.0f,true,false,true);
+	
+	//[self createTarget:@"brick_2.png"  atPosition:CGPointMake(909.0, FLOOR_HEIGTH+28.0f) rotation:0.0f isCircle:NO isStatic:NO isEnemy:NO];
+    createTarget("brick_2.png",CCPointMake(909.0f, FLOOR_HEIGHT+28.0f),0.0f,false,false,false);
+	
+	//[self createTarget:@"brick_1.png"  atPosition:CGPointMake(909.0, FLOOR_HEIGTH+28.0f+46.0f) rotation:0.0f isCircle:NO isStatic:NO isEnemy:NO];
+    createTarget("brick_1.png",CCPointMake(909.0f, FLOOR_HEIGHT+74.0f),0.0f,false,false,false);
+	
+	//[self createTarget:@"brick_1.png"  atPosition:CGPointMake(909.0, FLOOR_HEIGTH+28.0f+46.0f+23.0f) rotation:0.0f isCircle:NO isStatic:NO isEnemy:NO];
+    createTarget("brick_1.png",CCPointMake(909.0f, FLOOR_HEIGHT+74.0f+23.0f),0.0f,false,false,false);
+	
+	//[self createTarget:@"brick_2.png"  atPosition:CGPointMake(882.0, FLOOR_HEIGTH+108.0f) rotation:90.0f isCircle:NO isStatic:NO isEnemy:NO];
+	createTarget("brick_2.png",CCPointMake(882.0f, FLOOR_HEIGHT+108.0f),90.0f,false,false,false);
 
-	_player = CCSprite::spriteWithFile("Player.png");
-	_player->retain();
-	_player->setPosition(ccp (x, y));
-	this->addChild(_player);
+}
+
+void HelloWorld::tick(ccTime dt)
+{
+	//It is recommended that a fixed time step is used with Box2D for stability
+	//of the simulation, however, we are using a variable time step here.
+	//You need to make an informed choice, the following URL is useful
+	//http://gafferongames.com/game-physics/fix-your-timestep/
 	
-	this->setViewpointCenter(_player->getPosition());
+	int velocityIterations = 8;
+	int positionIterations = 1;
+    
+	// Instruct the world to perform a single step of simulation. It is
+	// generally best to keep the time step and iterations fixed.
+	world->Step(dt, velocityIterations, positionIterations);
 	
-	CCMutableArray<CCStringToStringDictionary*> *allObjects = objects->getObjects();
-	CCMutableArray<CCStringToStringDictionary*>::CCMutableArrayIterator it;
-	for (it = allObjects->begin(); it != allObjects->end(); ++it)
+	//Iterate over the bodies in the physics world
+	for (b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 	{
-		if ((*it)->objectForKey(std::string("Enemy")) != NULL)
-		{
-			int x = (*it)->objectForKey("x")->toInt();
-			int y = (*it)->objectForKey("y")->toInt();
-			this->addEnemyAt(x, y);
-		}
+		if (b->GetUserData() != NULL) {
+			//Synchronize the AtlasSprites position and rotation with the corresponding body
+			CCSprite* myActor = (CCSprite*)b->GetUserData();
+			myActor->setPosition( CCPointMake( b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO) );
+			myActor->setRotation( -1 * CC_RADIANS_TO_DEGREES(b->GetAngle()) );
+		}	
 	}
 	
-	this->setIsTouchEnabled(true);
+	// Arm is being released.
+    if (releasingArm && bulletJoint)
+    {
+        // Check if the arm reached the end so we can return the limits
+        if (armJoint->GetJointAngle() <= CC_DEGREES_TO_RADIANS(10))
+        {
+            releasingArm = false;
+            
+            // Destroy joint so the bullet will be free
+            world->DestroyJoint(bulletJoint);
+            bulletJoint = NULL;
+            
+			runAction(CCSequence::actions(CCDelayTime::actionWithDuration(5.0f),
+										  CCCallFunc::actionWithTarget(this, callfunc_selector(HelloWorld::resetBullet)),NULL));
+        }
+    }
 	
-	_numCollected = 0;
+	// Bullet is moving.
+    if (bulletBody && bulletJoint == NULL)
+    {
+        b2Vec2 position = bulletBody->GetPosition();
+        CCPoint myPosition = getPosition();
+        CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
+        
+        // Move the camera.
+        if (position.x > screenSize.width / 2.0f / PTM_RATIO)
+        {
+            myPosition.x = -MIN(screenSize.width * 2.0f - screenSize.width, position.x * PTM_RATIO - screenSize.width / 2.0f);
+            //getPosition().x = myPosition.x;
+			setPosition(myPosition);
+			getChildByTag(kTagTileMap)->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width - 20-myPosition.x, 20));
+        }
+    }
 	
-	_mode = 0;
-	
-	this->schedule(schedule_selector(HelloWorld::testCollisions));
-	
-	return true;
-}
-
-void HelloWorld::setViewpointCenter(CCPoint position)
-{
-	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-	
-	int x = MAX(position.x, winSize.width / 2);
-	int y = MAX(position.y, winSize.height / 2);
-	
-	x = MIN(x, (_tileMap->getMapSize().width * _tileMap->getTileSize().width) - winSize.width/2);
-	x = MIN(x, (_tileMap->getMapSize().height * _tileMap->getTileSize().height) - winSize.height/2);
-	
-	CCPoint actualPosition = ccp(x, y);
-	
-	CCPoint centerOfView = ccp(winSize.width/2, winSize.height/2);
-	
-	CCPoint viewPoint = ccpSub(centerOfView, actualPosition);
-	
-	this->setPosition(viewPoint);
-}
-
-void HelloWorld::registerWithTouchDispatcher()
-{
-	CCTouchDispatcher::sharedDispatcher()->addTargetedDelegate(this, 0, true);
-}
-
-bool HelloWorld::ccTouchBegan(CCTouch *touch, CCEvent *event)
-{
-	return true;
-}
-
-void HelloWorld::ccTouchEnded(CCTouch *touch, CCEvent *event)
-{
-	if (_mode == 0)
-	{
-		CCPoint touchLocation = touch->locationInView(touch->view());
-		touchLocation = CCDirector::sharedDirector()->convertToGL(touchLocation);
-		touchLocation = this->convertToNodeSpace(touchLocation);
-		
-		CCPoint playerPos = _player->getPosition();
-		CCPoint diff = ccpSub(touchLocation, playerPos);
-		
-		// using fabs because using abs throws a "abs in ambiguous" error
-		if (fabs(diff.x) > fabs(diff.y)) {
-			if (diff.x > 0) {
-				playerPos.x += _tileMap->getTileSize().width;
-			} else {
-				playerPos.x -= _tileMap->getTileSize().width; 
-			}    
-		} else {
-			if (diff.y > 0) {
-				playerPos.y += _tileMap->getTileSize().height;
-			} else {
-				playerPos.y -= _tileMap->getTileSize().height;
-			}
-		}
-		
-		if (playerPos.x <= (_tileMap->getMapSize().width * _tileMap->getTileSize().width) &&
-			playerPos.y <= (_tileMap->getMapSize().height * _tileMap->getTileSize().height) &&
-			playerPos.y >= 0 &&
-			playerPos.x >= 0 ) 
+	// Check for impacts
+    std::set<b2Body*>::iterator pos;
+    for(pos = contactListener->contacts.begin(); 
+        pos != contactListener->contacts.end(); ++pos)
+    {
+        b2Body *body = *pos;
+        
+        CCNode *contactNode = (CCNode*)body->GetUserData();
+        CCPoint position = contactNode->getPosition();
+        
+		removeChild(contactNode, true);
+        world->DestroyBody(body);
+        
+		std::vector<b2Body*>::iterator iter;
+		for(iter = targets->begin() ; iter != targets->end() ; ++iter)
 		{
-			this->setPlayerPosition(playerPos);
-		}
-		
-		this->setViewpointCenter(_player->getPosition());
-	}
-	else {
-		// Find where the touch is
-		CCPoint touchLocation = touch->locationInView(touch->view());
-		touchLocation = CCDirector::sharedDirector()->convertToGL(touchLocation);
-		touchLocation = this->convertToNodeSpace(touchLocation);
-		
-		// Create a projectile and put it at the player's location
-		CCSprite *projectile = CCSprite::spriteWithFile("Projectile.png");
-		projectile->setPosition(_player->getPosition());
-		this->addChild(projectile);
-		
-		// Determine where we wish to shoot the projectile to
-		int realX;
-		
-		// Are we shooting to the left or right?
-		CCPoint diff = ccpSub(touchLocation, _player->getPosition());
-		if (diff.x > 0)
-		{
-			realX = (_tileMap->getMapSize().width * _tileMap->getTileSize().width) +
-				(projectile->getContentSize().width/2);
-		} else {
-			realX = -(_tileMap	->getMapSize().width * _tileMap->getTileSize().width) -
-				(projectile->getContentSize().width/2);
-		}
-		float ratio = (float) diff.y / (float) diff.x;
-		int realY = ((realX - projectile->getPosition().x) * ratio) + projectile->getPosition().y;
-		CCPoint realDest = ccp(realX, realY);
-		
-		
-		// Determine the length of how far we're shooting
-		int offRealX = realX - projectile->getPosition().x;
-		int offRealY = realY - projectile->getPosition().y;
-		float length = sqrtf((offRealX*offRealX) + (offRealY*offRealY));
-		float velocity = 480/1; // 480pixels/1sec
-		float realMoveDuration = length/velocity;
-		
-		// Move projectile to actual endpoint
-		CCFiniteTimeAction *actionMoveTo = CCMoveTo::actionWithDuration(realMoveDuration, realDest);
-		CCCallFuncN *actionMoveDone = CCCallFuncN::actionWithTarget(this, callfuncN_selector(HelloWorld::projectileMoveFinished));
-		projectile->runAction(CCSequence::actionOneTwo(actionMoveTo, actionMoveDone));
-		
-		_projectiles->addObject(projectile);
-	}
-
-}
-
-void HelloWorld::setPlayerPosition(cocos2d::CCPoint position)
-{
-	CCPoint tileCoord = this->tileCoordForPosition(position);
-	int tileGid = _meta->tileGIDAt(tileCoord);
-	if (tileGid)
-	{
-		CCDictionary<std::string, CCString*> *properties = _tileMap->propertiesForGID(tileGid);
-		if (properties)
-		{
-			CCString *collision = properties->objectForKey("Collidable");
-			if (collision && (collision->toStdString().compare("True") == 0))
+			if(*iter == body)
 			{
-				SimpleAudioEngine::sharedEngine()->playEffect("hit.caf");
-				return;
+				targets->erase(iter);
+				break;
 			}
-			
-			CCString *collectable = properties->objectForKey("Collectable");
-			if (collectable && (collectable->toStdString().compare("True") == 0))
+		}
+		
+		std::vector<b2Body*>::iterator it;
+		for(it = enemies->begin() ; it!=enemies->end() ; ++it)
+		{
+			if(*it == body)
 			{
-				_meta->removeTileAt(tileCoord);
-				_foreground->removeTileAt(tileCoord);
-				
-				_numCollected++;
-				_hud->numCollectedChanged(_numCollected);
-				SimpleAudioEngine::sharedEngine()->playEffect("pickup.caf");
-				
-				if (_numCollected == 2) {
-					this->win();
-				}
+				enemies->erase(it);
+				break;
 			}
 		}
-	}
-	SimpleAudioEngine::sharedEngine()->playEffect("move.caf");
-	_player->setPosition(position);
+       // [targets removeObject:[NSValue valueWithPointer:body]];
+       // [enemies removeObject:[NSValue valueWithPointer:body]];
+		
+       CCParticleSun* explosion = CCParticleSun::node();
+		explosion->setTexture(CCTextureCache::sharedTextureCache()->addImage("fire.png"));
+		explosion->initWithTotalParticles(200);
+        explosion->setIsAutoRemoveOnFinish(true);
+        explosion->setStartSize(10.0f);
+        explosion->setSpeed(70.0f);
+        explosion->setAnchorPoint(ccp(0.5f,0.5f));
+        explosion->setPosition(position);
+        explosion->setDuration(1.0f);
+        explosion->retain();
+		addChild(explosion, 11);
+        explosion->release(); 
+    }
+    
+    // remove everything from the set
+    contactListener->contacts.clear();
 }
 
-CCPoint HelloWorld::tileCoordForPosition(cocos2d::CCPoint position)
+void HelloWorld::ccTouchesBegan(cocos2d::CCSet* pTouches, cocos2d::CCEvent* pEvent)
 {
-	int x = position.x / _tileMap->getTileSize().width;
-    int y = ((_tileMap->getMapSize().height * _tileMap->getTileSize().height) - position.y) / _tileMap->getTileSize().height;
-    return ccp(x, y);
-}
+	int num = pTouches->count();
+	CCLog("touchcount...%d",num);
 
-void HelloWorld::addEnemyAt(int x, int y)
-{
-	CCSprite *enemy = CCSprite::spriteWithFile("enemy1.png");
-	enemy->retain();
-	enemy->setPosition(ccp(x, y));
-	this->addChild(enemy);
-	// Use our animation method and
-	// start the enemy moving toward the player
-	this->animateEnemy(enemy);
-	_enemies->addObject(enemy);
-}
-
-// callback. starts another iteration of enemy movement.
-void HelloWorld::enemyMoveFinished(cocos2d::CCNode *enemy)
-{
-	this->animateEnemy((cocos2d::CCSprite *)enemy);
-}
-
-// a method to move the enemy 10 pixels toward the player
-void HelloWorld::animateEnemy(cocos2d::CCSprite *enemy)
-{
-	// speed of the enemy
-	ccTime actualDuration = 0.3f;
-
-	//rotate to face the player
-	CCPoint diff = ccpSub(_player->getPosition(), enemy->getPosition());
-	float angleRadians = atanf((float)diff.y / (float)diff.x);
-	float angleDegrees = CC_RADIANS_TO_DEGREES(angleRadians);
-	float cocosAngle = -1 * angleDegrees;
-	if (diff.x < 0) {
-		cocosAngle += 180;
-	}
-	enemy->setRotation(cocosAngle);
+	if(mouseJoint != NULL) return;
 	
-	CCPoint moveBy = ccpMult(ccpNormalize(ccpSub(_player->getPosition(),enemy->getPosition())), 10);
+	CCSetIterator it = pTouches->begin();
+	CCTouch* touch = (CCTouch*)(*it);
 	
-	// Create the actions
-	CCFiniteTimeAction *actionMove = CCMoveBy::actionWithDuration(actualDuration, moveBy);
-	CCCallFuncN *actionMoveDone = CCCallFuncN::actionWithTarget(this, callfuncN_selector(HelloWorld::enemyMoveFinished));
-	enemy->runAction(CCSequence::actions(actionMove,
-										 actionMoveDone,
-										 NULL));
-}
+	CCPoint location = touch->locationInView(touch->view());
+	CCPoint convertedLocation = CCDirector::sharedDirector()->convertToGL(location);
 
-void HelloWorld::projectileMoveFinished(CCNode *sprite)
-{
-	this->removeChild(sprite, true);
-	_projectiles->removeObject((cocos2d::CCSprite *)sprite, true);
-}
-
-void HelloWorld::testCollisions(ccTime dt)
-{
-	CCMutableArray<CCSprite*> *projectilesToDelete = new CCMutableArray<CCSprite*>;
-
-	CCMutableArray<CCSprite *>::CCMutableArrayIterator it, jt;
-	// iterate through projectiles
-	for (it = _projectiles->begin(); it != _projectiles->end(); it++) {
-		CCSprite *projectile = *it;
-		CCRect projectileRect = CCRectMake(projectile->getPosition().x - (projectile->getContentSize().width/2),
-										   projectile->getPosition().y - (projectile->getContentSize().height/2),
-										   projectile->getContentSize().width,
-										   projectile->getContentSize().height);
-		
-		CCMutableArray<CCSprite*> *targetsToDelete = new CCMutableArray<CCSprite*>;
-		
-		// iterate through enemies, see if any intersect with current projectile
-		for (jt = _enemies->begin(); jt != _enemies->end(); jt++)
-		{
-			CCSprite *target = *jt;
-			CCRect targetRect = CCRectMake(
-										   target->getPosition().x - (target->getContentSize().width/2), 
-										   target->getPosition().y - (target->getContentSize().height/2), 
-										   target->getContentSize().width, 
-										   target->getContentSize().height);
-			
-			if (CCRect::CCRectIntersectsRect(projectileRect, targetRect)) {
-				targetsToDelete->addObject(target);
-			}
-		}
-		
-		// delete all hit enemies
-		for (jt = targetsToDelete->begin(); jt != targetsToDelete->end(); jt++) 
-		{
-			_enemies->removeObject(*jt);
-			this->removeChild((*jt), true);
-		}
-		
-		if (targetsToDelete->count() > 0)
-		{
-			projectilesToDelete->addObject(projectile);
-		}
-		
-		targetsToDelete->release();
-	}
-	
-	// remove all the projectiles that hit.
-	for (it = projectilesToDelete->begin(); it != projectilesToDelete->end(); it++) {
-		CCSprite *projectile = *it;
-		_projectiles->removeObject(projectile, true);
-		this->removeChild(projectile, true);
-	}
-	
-	for (jt = _enemies->begin(); jt != _enemies->end(); jt++)
+	if(gameover)
 	{
-		CCSprite *target = *jt;
-		CCRect targetRect = CCRectMake(
-									   target->getPosition().x - (target->getContentSize().width/2), 
-									   target->getPosition().y - (target->getContentSize().height/2), 
-									   target->getContentSize().width, 
-									   target->getContentSize().height);
+		CCDirector::sharedDirector()->end();
+
+		#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+			exit(0);
+		#endif
+	}
+	
+	b2Vec2 locationWorld = b2Vec2(convertedLocation.x/PTM_RATIO,convertedLocation.y/PTM_RATIO);
+	
+	if(locationWorld.x<armBody->GetWorldCenter().x + 50.0f/PTM_RATIO)
+	{
+		b2MouseJointDef md;
+		md.bodyA = groundBody;
+		md.bodyB = armBody;
+		md.target = locationWorld;
+		md.maxForce = 2000;
 		
-		if (CCRect::CCRectContainsPoint(targetRect, _player->getPosition())) {
-			this->lose();
-		}
+		mouseJoint = (b2MouseJoint*)world->CreateJoint(&md);
 	}
 }
 
-void HelloWorld::win()
+void HelloWorld::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent)
 {
+	if(mouseJoint == NULL) return;
+	
+	CCSetIterator it = pTouches->begin();
+	CCTouch* touch = (CCTouch*)(*it);
+	
+	CCPoint location = touch->locationInView(touch->view());
+	CCPoint convertedLocation = CCDirector::sharedDirector()->convertToGL(location);
+	
+	b2Vec2 locationWorld = b2Vec2(convertedLocation.x/PTM_RATIO,convertedLocation.y/PTM_RATIO);
+	
+	mouseJoint->SetTarget(locationWorld);
+	
 }
 
-void HelloWorld::lose()
+void HelloWorld::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
 {
+	if(mouseJoint != NULL)
+	{
+		if(armJoint->GetJointAngle()>=CC_DEGREES_TO_RADIANS(20))//检查弹臂是否松开并且恢复
+		{
+			releasingArm = true;
+		}
+		world->DestroyJoint(mouseJoint);
+		mouseJoint = NULL;
+	}
+}
+
+void HelloWorld::createBullets(int count)
+{
+	currentBullet = 0;
+    CGFloat pos = 62.0f;
+    
+    if (count > 0)
+    {
+        // delta is the spacing between corns
+        // 62 is the position o the screen where we want the corns to start appearing
+        // 165 is the position on the screen where we want the corns to stop appearing
+        // 30 is the size of the corn
+        CGFloat delta = (count > 1)?((165.0f - 62.0f - 30.0f) / (count - 1)):0.0f;
+		
+        bullets->reserve(count);
+        for (int i=0; i<count; i++, pos+=delta)
+        {
+            // Create the bullet
+            //
+            CCSprite *sprite = CCSprite::spriteWithFile("acorn.png");
+            addChild(sprite, 1);
+            
+            b2BodyDef bulletBodyDef;
+            bulletBodyDef.type = b2_dynamicBody;
+            bulletBodyDef.bullet = true;
+            bulletBodyDef.position.Set(pos/PTM_RATIO,(FLOOR_HEIGHT+15.0f)/PTM_RATIO);
+            bulletBodyDef.userData = sprite;
+            b2Body *bullet = world->CreateBody(&bulletBodyDef);
+            bullet->SetActive(false);
+            
+            b2CircleShape circle;
+            circle.m_radius = 15.0/PTM_RATIO;
+            
+            b2FixtureDef ballShapeDef;
+            ballShapeDef.shape = &circle;
+            ballShapeDef.density = 0.8f;
+            ballShapeDef.restitution = 0.2f;
+            ballShapeDef.friction = 0.99f;
+            bullet->CreateFixture(&ballShapeDef);
+            
+            bullets->push_back(bullet);
+        }
+    }
+}
+
+bool HelloWorld::attachBullet()
+{
+	if(currentBullet < bullets->capacity())
+	{
+		
+		//bulletBody = (b2Body*)[[bullets objectAtIndex:currentBullet++] pointerValue];
+        bulletBody = bullets->at(currentBullet++);
+		bulletBody->SetTransform(b2Vec2(230.0f/PTM_RATIO,(155.0f+FLOOR_HEIGHT)/PTM_RATIO), 0.0f);
+        bulletBody->SetActive(true);
+		
+        b2WeldJointDef weldJointDef;
+        weldJointDef.Initialize(bulletBody, armBody, b2Vec2(240.0f/PTM_RATIO,(155.0f+FLOOR_HEIGHT)/PTM_RATIO));
+        weldJointDef.collideConnected = false;
+        
+        bulletJoint = (b2WeldJoint*)world->CreateJoint(&weldJointDef);
+		return true;
+	}
+	return false;
+}
+
+void HelloWorld::attachBullet_v()
+{
+	if(currentBullet < bullets->capacity())
+	{
+		
+		//bulletBody = (b2Body*)[[bullets objectAtIndex:currentBullet++] pointerValue];
+        bulletBody = bullets->at(currentBullet++);
+		bulletBody->SetTransform(b2Vec2(230.0f/PTM_RATIO,(155.0f+FLOOR_HEIGHT)/PTM_RATIO), 0.0f);
+        bulletBody->SetActive(true);
+		
+        b2WeldJointDef weldJointDef;
+        weldJointDef.Initialize(bulletBody, armBody, b2Vec2(240.0f/PTM_RATIO,(155.0f+FLOOR_HEIGHT)/PTM_RATIO));
+        weldJointDef.collideConnected = false;
+        
+        bulletJoint = (b2WeldJoint*)world->CreateJoint(&weldJointDef);
+		
+	}
+}
+
+void HelloWorld::resetBullet()
+{
+	if(enemies->size() == 0)
+	{
+		gameover = true;
+	}
+	else if(attachBullet())
+	{
+		runAction(CCMoveTo::actionWithDuration(2.0f, CCPointZero));
+		getChildByTag(kTagTileMap)->runAction(CCMoveTo::actionWithDuration(2.0f, CCPointMake(CCDirector::sharedDirector()->getWinSize().width - 20, 20)));
+	}
+	else
+	{
+		gameover = true;
+	}
+
+}
+
+void HelloWorld::resetGame()
+{
+	createBullets(4);
+	//attachBullet();
+	createTargets();
+	runAction(CCSequence::actions(CCMoveTo::actionWithDuration(1.5f, CCPointMake(-480.0f,0.0f)) , 
+								  CCCallFunc::actionWithTarget(this, callfunc_selector(HelloWorld::attachBullet_v)),
+								  CCDelayTime::actionWithDuration(1.0f),
+								  CCMoveTo::actionWithDuration(1.5f, CCPointZero),
+								  NULL));
+	getChildByTag(kTagTileMap)->runAction(CCSequence::actions(CCMoveTo::actionWithDuration(1.5f, CCPointMake(CCDirector::sharedDirector()->getWinSize().width + 460,20)) , 
+								  CCDelayTime::actionWithDuration(1.0f),
+								  CCMoveTo::actionWithDuration(1.5f, CCPointMake(CCDirector::sharedDirector()->getWinSize().width - 20, 20)),
+								  NULL));
+}
+/*void HelloWorld::ccTouchesEnded(CCSet* touches, CCEvent* event)
+{
+	//Add a new body/atlas sprite at the touched location
+	CCSetIterator it;
+	CCTouch* touch;
+    
+	for( it = touches->begin(); it != touches->end(); it++) 
+	{
+		touch = (CCTouch*)(*it);
+        
+		if(!touch)
+			break;
+        
+		CCPoint location = touch->locationInView(touch->view());
+		
+		location = CCDirector::sharedDirector()->convertToGL(location);
+        
+		addNewSpriteWithCoords( location );
+	}
+}*/
+
+CCScene* HelloWorld::scene()
+{
+    // 'scene' is an autorelease object
+    CCScene *scene = CCScene::node();
+    
+    // add layer as a child to scene
+    CCLayer* layer = new HelloWorld();
+    scene->addChild(layer);
+    layer->release();
+    
+    return scene;
+}
+
+void HelloWorld::menuCloseCallback(CCObject* pSender)
+{
+	CCDirector::sharedDirector()->end();
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+	exit(0);
+#endif
 }

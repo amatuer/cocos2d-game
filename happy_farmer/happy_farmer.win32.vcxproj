@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{59DE4E86-EE8F-4A4A-991E-1B632866564B}</ProjectGuid>
+    <ProjectGuid>{B901A27D-5407-442E-9B55-6CA62A16077C}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -47,7 +47,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>.;.\win32;.\Classes;..\cocos2dx;..\cocos2dx\include;..\cocos2dx\platform;..\cocos2dx\platform\third_party\win32\OGLES;..\;..\CocosDenshion\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MinimalRebuild>true</MinimalRebuild>
@@ -73,11 +74,11 @@
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <HeaderFileName>first-game.h</HeaderFileName>
-      <InterfaceIdentifierFileName>first-game_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>first-game_p.c</ProxyFileName>
+      <HeaderFileName>happy_farmer.h</HeaderFileName>
+      <InterfaceIdentifierFileName>happy_farmer_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>happy_farmer_p.c</ProxyFileName>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)/first-game.tlb</TypeLibraryName>
+      <TypeLibraryName>$(IntDir)/happy_farmer.tlb</TypeLibraryName>
       <DllDataFileName>
       </DllDataFileName>
     </Midl>
@@ -111,40 +112,47 @@
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <HeaderFileName>first-game.h</HeaderFileName>
-      <InterfaceIdentifierFileName>first-game_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>first-game_p.c</ProxyFileName>
+      <HeaderFileName>happy_farmer.h</HeaderFileName>
+      <InterfaceIdentifierFileName>happy_farmer_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>happy_farmer_p.c</ProxyFileName>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)/first-game.tlb</TypeLibraryName>
+      <TypeLibraryName>$(IntDir)/happy_farmer.tlb</TypeLibraryName>
       <DllDataFileName>
       </DllDataFileName>
     </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="Resources\CloseNormal.png" />
-    <None Include="Resources\CloseSelected.png" />
-    <None Include="Resources\HelloWorld.png" />
-    <None Include="win32\res\first-game.ico" />
+    <None Include="win32\res\happy_farmer.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="win32\first-game.rc" />
+    <ResourceCompile Include="win32\happy_farmer.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\GameCommon\Config.h" />
     <ClInclude Include="..\GameCommon\Prerequisites.h" />
     <ClInclude Include="..\GameCommon\Singleton.h" />
     <ClInclude Include="..\GameCommon\StrMgr.h" />
     <ClInclude Include="Classes\AppDelegate.h" />
+    <ClInclude Include="Classes\GameConfig.h" />
+    <ClInclude Include="Classes\GameLayer.h" />
+    <ClInclude Include="Classes\GLES-Render.h" />
     <ClInclude Include="Classes\HelloWorldScene.h" />
-    <ClInclude Include="Classes\MyContactListener.h" />
+    <ClInclude Include="Classes\Hero.h" />
+    <ClInclude Include="Classes\HeroContactListener.h" />
+    <ClInclude Include="Classes\Sky.h" />
+    <ClInclude Include="Classes\Terrain.h" />
     <ClInclude Include="win32\main.h" />
     <ClInclude Include="win32\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\GameCommon\StrMgr.cpp" />
     <ClCompile Include="Classes\AppDelegate.cpp" />
+    <ClCompile Include="Classes\GameLayer.cpp" />
+    <ClCompile Include="Classes\GLES-Render.cpp" />
     <ClCompile Include="Classes\HelloWorldScene.cpp" />
-    <ClCompile Include="Classes\MyContactListener.cpp" />
+    <ClCompile Include="Classes\Hero.cpp" />
+    <ClCompile Include="Classes\HeroContactListener.cpp" />
+    <ClCompile Include="Classes\Sky.cpp" />
+    <ClCompile Include="Classes\Terrain.cpp" />
     <ClCompile Include="win32\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

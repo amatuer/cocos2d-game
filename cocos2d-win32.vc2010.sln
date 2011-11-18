@@ -20,6 +20,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "liblua", "lua\proj.win32\li
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "first-game.win32", "first-game\first-game.win32.vcxproj", "{59DE4E86-EE8F-4A4A-991E-1B632866564B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "happy_farmer.win32", "happy_farmer\happy_farmer.win32.vcxproj", "{B901A27D-5407-442E-9B55-6CA62A16077C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -58,6 +60,10 @@ Global
 		{59DE4E86-EE8F-4A4A-991E-1B632866564B}.Debug|Win32.Build.0 = Debug|Win32
 		{59DE4E86-EE8F-4A4A-991E-1B632866564B}.Release|Win32.ActiveCfg = Release|Win32
 		{59DE4E86-EE8F-4A4A-991E-1B632866564B}.Release|Win32.Build.0 = Release|Win32
+		{B901A27D-5407-442E-9B55-6CA62A16077C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B901A27D-5407-442E-9B55-6CA62A16077C}.Debug|Win32.Build.0 = Debug|Win32
+		{B901A27D-5407-442E-9B55-6CA62A16077C}.Release|Win32.ActiveCfg = Release|Win32
+		{B901A27D-5407-442E-9B55-6CA62A16077C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

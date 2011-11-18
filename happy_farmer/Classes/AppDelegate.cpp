@@ -6,6 +6,7 @@ using namespace CocosDenshion;
 
 
 #include "HelloWorldScene.h"
+#include "GameLayer.h"
 
 using namespace cocos2d;
 
@@ -29,7 +30,7 @@ bool AppDelegate::initInstance()
         // The HelloWorld is designed as HVGA.
         CCEGLView * pMainWnd = new CCEGLView();
         CC_BREAK_IF(! pMainWnd
-            || ! pMainWnd->Create(TEXT("FirstBox2d"), 320, 480));
+            || ! pMainWnd->Create(TEXT("happy_farmer"), 320, 480));
 #endif  // CC_PLATFORM_WIN32
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
@@ -55,7 +56,7 @@ bool AppDelegate::initInstance()
 #if !defined(_TRANZDA_VM_)
         // set the resource zip file
         // on wophone emulator, we copy resources files to Work7/TG3/APP/ folder instead of zip file
-        CCFileUtils::setResource("FirstBox2d.zip");
+        CCFileUtils::setResource("happy_farmer.zip");
 #endif
 
 #endif  // CC_PLATFORM_WOPHONE
@@ -81,7 +82,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     pDirector->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-    CCScene *pScene = HelloWorld::scene();
+    CCScene *pScene = GameLayer::scene();
 
     // run
     pDirector->runWithScene(pScene);

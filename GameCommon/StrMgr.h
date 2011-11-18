@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include "Singleton.h"
 
 class StrMgr : public Singleton<StrMgr> 

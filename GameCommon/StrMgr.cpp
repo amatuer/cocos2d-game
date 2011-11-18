@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "StrMgr.h"
 
 #include <boost/property_tree/ptree.hpp>
@@ -7,7 +6,7 @@
 
 StrMgr::StrMgr()
 {
-	loadFile("string.json");
+	loadFile("config/string.json");
 }
 
 StrMgr::~StrMgr()

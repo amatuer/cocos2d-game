@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{f9589aa5-1b67-44f0-bbe3-e1cf4f286c14}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{ebdde5a0-ead6-4292-a9f3-62652aeee8f9}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;png;manifest</Extensions>
+    </Filter>
+    <Filter Include="GameCommon">
+      <UniqueIdentifier>{c9953a11-a003-4c3b-b62c-4933301ef5ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{0b2cc17a-0eb9-41c5-8325-8c83ee8e6937}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="win32\res\happy_farmer.ico">
+      <Filter>resource</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="win32\happy_farmer.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\GameCommon\Prerequisites.h">
+      <Filter>GameCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameCommon\Singleton.h">
+      <Filter>GameCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameCommon\StrMgr.h">
+      <Filter>GameCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="win32\resource.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="win32\main.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\AppDelegate.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\HelloWorldScene.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\GameConfig.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\GameLayer.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\GLES-Render.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Hero.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\HeroContactListener.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Sky.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Terrain.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="win32\main.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameCommon\StrMgr.cpp">
+      <Filter>GameCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\AppDelegate.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Sky.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Terrain.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\GameLayer.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\GLES-Render.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\HelloWorldScene.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\HeroContactListener.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Hero.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
