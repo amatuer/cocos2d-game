@@ -2,6 +2,10 @@
 
 #include "StageLayer.h"
 #include "../GameCommon/Button.h"
+#include "PlayGameLayer.h"
+
+#include <boost/format.hpp>
+
 using namespace cocos2d;
 
 CCScene* StageLayer::scene()
@@ -33,13 +37,20 @@ bool StageLayer::init()
 		road->setPosition(ccp(winSize.width / 2, winSize.height / 2));
 	}
 
-	Button* btn1 = Button::itemWithId("stage1-btn", this, menu_selector(StageLayer::menuCallbackStage));
-	btn1->setTag(1);
+	Button* btn0 = Button::itemWithId("stage0-btn", this, menu_selector(StageLayer::menuCallbackStage));
+	btn0->setTag(0);
 
-	CCMenu* menu = CCMenu::menuWithItems(btn1, NULL);
+	CCMenu* menu = CCMenu::menuWithItems(btn0, NULL);
 	menu->setAnchorPoint(ccp(0, 0));
 	menu->setPosition(ccp(0, 0));
 	menu->setContentSize(winSize);
+
+	for (int i = 1; i <= 12; ++i) {
+		std::string btnId = str(boost::format("stage%d-btn") % i);
+		Button* btn = Button::itemWithId(btnId.c_str(), this, menu_selector(StageLayer::menuCallbackStage));
+		btn->setTag(i);
+		menu->addChild(btn, i);
+	}
 	this->addChild(menu);
 
 	return true;
@@ -54,5 +65,9 @@ void StageLayer::menuCallbackStage(CCObject* pSender)
 
 void StageLayer::gotoStage(int index)
 {
-
+	CCScene* stage = PlayGameLayer::scene();
+	if (stage) {
+		CCTransitionSlideInR *transitionScene = CCTransitionSlideInR::transitionWithDuration(1, stage);
+		CCDirector::sharedDirector()->replaceScene(transitionScene);
+	}
 }

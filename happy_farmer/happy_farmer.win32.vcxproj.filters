@@ -81,6 +81,9 @@
     <ClInclude Include="..\GameCommon\GuiMgr.h">
       <Filter>GameCommon</Filter>
     </ClInclude>
+    <ClInclude Include="Classes\PlayGameLayer.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win32\main.cpp">
@@ -124,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="..\GameCommon\GuiMgr.cpp">
       <Filter>GameCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\PlayGameLayer.cpp">
+      <Filter>Classes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

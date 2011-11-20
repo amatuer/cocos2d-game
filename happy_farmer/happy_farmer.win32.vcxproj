@@ -140,6 +140,7 @@
     <ClInclude Include="Classes\HelloWorldScene.h" />
     <ClInclude Include="Classes\Hero.h" />
     <ClInclude Include="Classes\HeroContactListener.h" />
+    <ClInclude Include="Classes\PlayGameLayer.h" />
     <ClInclude Include="Classes\Sky.h" />
     <ClInclude Include="Classes\Terrain.h" />
     <ClInclude Include="StageLayer.h" />
@@ -157,6 +158,7 @@
     <ClCompile Include="Classes\HelloWorldScene.cpp" />
     <ClCompile Include="Classes\Hero.cpp" />
     <ClCompile Include="Classes\HeroContactListener.cpp" />
+    <ClCompile Include="Classes\PlayGameLayer.cpp" />
     <ClCompile Include="Classes\Sky.cpp" />
     <ClCompile Include="Classes\Terrain.cpp" />
     <ClCompile Include="StageLayer.cpp" />

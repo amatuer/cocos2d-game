@@ -7,6 +7,7 @@ using namespace CocosDenshion;
 
 #include "HelloWorldScene.h"
 #include "TitleLayer.h"
+#include "PlayGameLayer.h"
 
 using namespace cocos2d;
 
@@ -82,7 +83,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     pDirector->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-    CCScene *pScene = TitleLayer::scene();
+    CCScene *pScene = PlayGameLayer::scene();
 
     // run
     pDirector->runWithScene(pScene);

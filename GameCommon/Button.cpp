@@ -84,3 +84,49 @@ void Button::setBgImage(CCNode* var)
 	}
 	m_pBgImage = var;
 }
+
+
+bool MoveableMenu::ccTouchBegan(CCTouch* touch, CCEvent* event)
+{
+	return CCMenu::ccTouchBegan(touch, event);
+}
+void MoveableMenu::ccTouchEnded(CCTouch* touch, CCEvent* event)
+{
+	if (m_pSelectedItem) {
+		CCPoint pt = m_pSelectedItem->getPosition();
+		CCLOG("btn%d: %f  %f", m_pSelectedItem->getTag(), pt.x, pt.y);
+	}
+	CCMenu::ccTouchEnded(touch, event);
+}
+void MoveableMenu::ccTouchCancelled(CCTouch *touch, CCEvent* event)
+{
+	CCMenu::ccTouchCancelled(touch, event);
+}
+void MoveableMenu::ccTouchMoved(CCTouch* touch, CCEvent* event)
+{
+	if (m_pSelectedItem) {
+		CCPoint touchLocation = touch->locationInView(touch->view());
+		touchLocation = CCDirector::sharedDirector()->convertToGL(touchLocation);
+		touchLocation = this->convertToNodeSpace(touchLocation);
+
+		m_pSelectedItem->setPosition(touchLocation);
+		return;
+	}
+	CCMenu::ccTouchMoved(touch, event);
+}
+
+MoveableMenu * MoveableMenu::menuWithItems(CCMenuItem* item, ...)
+{
+	va_list args;
+	va_start(args,item);
+	MoveableMenu *pRet = new MoveableMenu();
+	if (pRet && pRet->initWithItems(item, args))
+	{
+		pRet->autorelease();
+		va_end(args);
+		return pRet;
+	}
+	va_end(args);
+	CC_SAFE_DELETE(pRet)
+	return NULL;
+}

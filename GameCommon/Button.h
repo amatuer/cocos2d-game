@@ -16,3 +16,15 @@ protected:
 	CCNode* m_pBgImage;
 	std::string m_btnId;
 };
+
+
+class MoveableMenu : public cocos2d::CCMenu
+{
+public:
+	static MoveableMenu* menuWithItems(cocos2d::CCMenuItem* item, ...);
+
+	virtual bool ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* event);
+	virtual void ccTouchEnded(cocos2d::CCTouch* touch, cocos2d::CCEvent* event);
+	virtual void ccTouchCancelled(cocos2d::CCTouch *touch, cocos2d::CCEvent* event);
+	virtual void ccTouchMoved(cocos2d::CCTouch* touch, cocos2d::CCEvent* event);
+};
