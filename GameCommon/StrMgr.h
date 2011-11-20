@@ -10,6 +10,7 @@ public:
 
 	void loadFile(const char* fileName);
 	const char* getStr(const char* idRes) const;
+	const char* getStr(const std::string& idRes) const;
 private:
 	std::map<std::string, std::string> strings_;
 };

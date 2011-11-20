@@ -45,3 +45,17 @@ const char* StrMgr::getStr(const char* idRes) const
 
 	return itr->second.c_str();
 }
+
+const char* StrMgr::getStr(const std::string& idRes) const
+{
+	std::map<std::string, std::string>::const_iterator itr = strings_.find(idRes);
+	if (itr == strings_.end()) {
+#ifdef DEBUG
+		return "Unknown";
+#else
+		return "";
+#endif
+	}
+
+	return itr->second.c_str();
+}

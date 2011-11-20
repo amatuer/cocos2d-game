@@ -69,6 +69,18 @@
     <ClInclude Include="Classes\Terrain.h">
       <Filter>Classes</Filter>
     </ClInclude>
+    <ClInclude Include="TitleLayer.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="StageLayer.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameCommon\Button.h">
+      <Filter>GameCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameCommon\GuiMgr.h">
+      <Filter>GameCommon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win32\main.cpp">
@@ -100,6 +112,18 @@
     </ClCompile>
     <ClCompile Include="Classes\Hero.cpp">
       <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleLayer.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="StageLayer.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameCommon\Button.cpp">
+      <Filter>GameCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameCommon\GuiMgr.cpp">
+      <Filter>GameCommon</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

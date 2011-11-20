@@ -128,6 +128,8 @@
     <ResourceCompile Include="win32\happy_farmer.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\GameCommon\Button.h" />
+    <ClInclude Include="..\GameCommon\GuiMgr.h" />
     <ClInclude Include="..\GameCommon\Prerequisites.h" />
     <ClInclude Include="..\GameCommon\Singleton.h" />
     <ClInclude Include="..\GameCommon\StrMgr.h" />
@@ -140,10 +142,14 @@
     <ClInclude Include="Classes\HeroContactListener.h" />
     <ClInclude Include="Classes\Sky.h" />
     <ClInclude Include="Classes\Terrain.h" />
+    <ClInclude Include="StageLayer.h" />
+    <ClInclude Include="TitleLayer.h" />
     <ClInclude Include="win32\main.h" />
     <ClInclude Include="win32\resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\GameCommon\Button.cpp" />
+    <ClCompile Include="..\GameCommon\GuiMgr.cpp" />
     <ClCompile Include="..\GameCommon\StrMgr.cpp" />
     <ClCompile Include="Classes\AppDelegate.cpp" />
     <ClCompile Include="Classes\GameLayer.cpp" />
@@ -153,6 +159,8 @@
     <ClCompile Include="Classes\HeroContactListener.cpp" />
     <ClCompile Include="Classes\Sky.cpp" />
     <ClCompile Include="Classes\Terrain.cpp" />
+    <ClCompile Include="StageLayer.cpp" />
+    <ClCompile Include="TitleLayer.cpp" />
     <ClCompile Include="win32\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

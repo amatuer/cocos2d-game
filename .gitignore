@@ -53,3 +53,8 @@ build_*_xcode/
 xcschememanagement.plist
 build/
 .DS_Store
+
+/resources
+/happy_farmer/Resources
+/langrisser/Resources
+/first-game/Resources
