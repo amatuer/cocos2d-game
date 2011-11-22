@@ -5,9 +5,12 @@ using namespace cocos2d;
 #define kTopScale 0.8f
 #define kGlassScale 0.5f
 
-#define kLabelTopStart  470.0f
+#define kLabelTopStart  420.0f
 #define kLabelBottomEnd  10.0f
 #define kLabelLeft  80.0f
+
+#define kAcc 0.3f
+#define kMacSpeed 15.0f
 
 CCScene* HelloWorld::scene()
 {
@@ -86,24 +89,23 @@ bool HelloWorld::init()
 	this->addChild(menu, 10);
 
 	float height = kLabelTopStart;
-
+	char text[128] = {0};
 	for (int i = 0; i < LABEL_COUNT; ++i) {
 		m_labelBg[i] = CCSprite::spriteWithFile("sm/labelbg.png");
 		this->addChild(m_labelBg[i], 0);
 
 		CCSize size = m_labelBg[i]->getContentSize();
-		m_labelBg[i]->setPosition(ccp(winSize.width / 2, height - size.height / 2));
+		CCPoint pt = ccp(winSize.width / 2, height);
+		m_labelBg[i]->setPosition(pt);
 		m_labelBg[i]->setScaleX((imageGlassSize.width * kGlassScale - 30) / m_labelBg[i]->getContentSize().width);
 		m_labelBg[i]->setScaleY(0.6f);
 
-		height -= size.height / 2 + 10;
-	}
-
-	char text[128] = {0};
-	for (int i = 0; i < LABEL_COUNT; ++i) {
 		_snprintf(text, sizeof(text) - 1, "Test%d", i);
-		m_label[i] = CCLabelTTF::labelWithString(text, "Zapfino", 18);
-		this->addChild(m_label[i], 20);
+		m_label[i] = CCLabelTTF::labelWithString(text, "Arial", 28);
+		this->addChild(m_label[i], 1);
+		m_label[i]->setPosition(pt);
+
+		height -= size.height / 2 + 30;
 	}
 
 	m_focusLabel = CCSprite::spriteWithFile("sm/labelbgf.png");
@@ -112,12 +114,53 @@ bool HelloWorld::init()
 		m_focusLabel->setScaleY(0.6f);
 		m_focusLabel->setPosition(ccp(winSize.width / 2, winSize.height / 2));
 		this->addChild(m_focusLabel, 1);
+		m_focusLabel->setIsVisible(false);
 	}
+
+	m_startRand = false;
+	m_curSpeed = 0;
+	m_curAcc = 0;
+	this->scheduleUpdate();
 	return true;
 }
 
 void HelloWorld::menuCallbackPlay(CCObject* pSender)
 {
-
+	if (m_startRand) {
+		m_focusLabel->setIsVisible(false);
+		m_startRand = false;
+	} else {
+		m_startRand = true;
+	}
 }
 
+void HelloWorld::update(cocos2d::ccTime dt)
+{
+	if (m_startRand) {
+		m_curSpeed += kAcc;
+	} else {
+		m_curSpeed -= kAcc;
+	}
+
+	if (m_curSpeed > kMacSpeed) {
+		m_curSpeed = kMacSpeed;
+	}
+
+	if (m_curSpeed < 0) {
+		m_curSpeed = 0;
+	}
+
+	if (m_curSpeed > 0) {
+		for (int i = 0; i < LABEL_COUNT; ++i) {
+			CCPoint pt = m_labelBg[i]->getPosition();
+			pt.y -= m_curSpeed;
+
+			if (pt.y <= kLabelBottomEnd) {
+				pt.y = kLabelTopStart;
+			}
+
+			m_labelBg[i]->setPosition(pt);
+			m_label[i]->setPosition(pt);
+		}
+	}
+}

@@ -5,10 +5,11 @@
 #include "Box2D/Box2D.h"
 #include "../testBasic.h"
 
+class GLESDebugDraw;
 class Box2DTestLayer : public CCLayer
 {
 	b2World* world;
-	//GLESDebugDraw *m_debugDraw;
+	GLESDebugDraw *m_debugDraw;
 
 public:
 	Box2DTestLayer();

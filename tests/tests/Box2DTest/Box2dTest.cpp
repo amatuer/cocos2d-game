@@ -1,5 +1,6 @@
 #include "Box2dTest.h"
 #include "../testResource.h"
+#include "../Box2DTestBed/GLES-Render.h"
 
 #define PTM_RATIO 32
 enum 
@@ -29,18 +30,18 @@ Box2DTestLayer::Box2DTestLayer()
 			
 	world->SetContinuousPhysics(true);
 
-/*	
+
 	m_debugDraw = new GLESDebugDraw( PTM_RATIO );
 	world->SetDebugDraw(m_debugDraw);
 	
-	uint flags = 0;
+	uint32 flags = 0;
 	flags += b2DebugDraw::e_shapeBit;
 	flags += b2DebugDraw::e_jointBit;
 	flags += b2DebugDraw::e_aabbBit;
 	flags += b2DebugDraw::e_pairBit;
 	flags += b2DebugDraw::e_centerOfMassBit;
 	m_debugDraw->SetFlags(flags);		
-*/
+
 	
 	// Define the ground body.
 	b2BodyDef groundBodyDef;
@@ -103,7 +104,7 @@ void Box2DTestLayer::draw()
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	
-	//world->DrawDebugData();
+	world->DrawDebugData();
 	
 	// restore default GL states
 	glEnable(GL_TEXTURE_2D);
