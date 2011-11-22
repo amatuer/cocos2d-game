@@ -24,6 +24,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "happy_farmer.win32", "happy
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "langrisser.win32", "langrisser\langrisser.win32.vcxproj", "{CC18028E-6B28-4B62-AE32-1EE70E1AD90C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SlotMachine.win32", "SlotMachine\SlotMachine.win32.vcxproj", "{7D2EC7E9-635A-4A42-822C-A3B7DA9152D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -70,6 +72,10 @@ Global
 		{CC18028E-6B28-4B62-AE32-1EE70E1AD90C}.Debug|Win32.Build.0 = Debug|Win32
 		{CC18028E-6B28-4B62-AE32-1EE70E1AD90C}.Release|Win32.ActiveCfg = Release|Win32
 		{CC18028E-6B28-4B62-AE32-1EE70E1AD90C}.Release|Win32.Build.0 = Release|Win32
+		{7D2EC7E9-635A-4A42-822C-A3B7DA9152D7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7D2EC7E9-635A-4A42-822C-A3B7DA9152D7}.Debug|Win32.Build.0 = Debug|Win32
+		{7D2EC7E9-635A-4A42-822C-A3B7DA9152D7}.Release|Win32.ActiveCfg = Release|Win32
+		{7D2EC7E9-635A-4A42-822C-A3B7DA9152D7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

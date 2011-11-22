@@ -81,7 +81,13 @@
     <ClInclude Include="..\GameCommon\GuiMgr.h">
       <Filter>GameCommon</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\PlayGameLayer.h">
+    <ClInclude Include="Classes\BackgroundLayer.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\TerrainLayer.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\GamePlayLayer.h">
       <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>
@@ -128,7 +134,13 @@
     <ClCompile Include="..\GameCommon\GuiMgr.cpp">
       <Filter>GameCommon</Filter>
     </ClCompile>
-    <ClCompile Include="Classes\PlayGameLayer.cpp">
+    <ClCompile Include="Classes\BackgroundLayer.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\TerrainLayer.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\GamePlayLayer.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
   </ItemGroup>

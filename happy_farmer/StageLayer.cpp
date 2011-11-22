@@ -2,7 +2,7 @@
 
 #include "StageLayer.h"
 #include "../GameCommon/Button.h"
-#include "PlayGameLayer.h"
+#include "GamePlayLayer.h"
 
 #include <boost/format.hpp>
 
@@ -65,7 +65,7 @@ void StageLayer::menuCallbackStage(CCObject* pSender)
 
 void StageLayer::gotoStage(int index)
 {
-	CCScene* stage = PlayGameLayer::scene();
+	CCScene* stage = GamePlayLayer::scene();
 	if (stage) {
 		CCTransitionSlideInR *transitionScene = CCTransitionSlideInR::transitionWithDuration(1, stage);
 		CCDirector::sharedDirector()->replaceScene(transitionScene);
