@@ -8,6 +8,9 @@
     <Filter Include="Classes">
       <UniqueIdentifier>{bb7eda40-0760-406d-98a1-57489eb4789b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameCommon">
+      <UniqueIdentifier>{a2db7329-e406-4076-bd5e-283dfd84760b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win32\resource.h">
@@ -22,6 +25,15 @@
     <ClInclude Include="Classes\HelloWorldScene.h">
       <Filter>Classes</Filter>
     </ClInclude>
+    <ClInclude Include="SlotMachineLayer.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameCommon\BaseFunc.h">
+      <Filter>GameCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="SlotMachineData.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win32\main.cpp">
@@ -31,6 +43,15 @@
       <Filter>Classes</Filter>
     </ClCompile>
     <ClCompile Include="Classes\HelloWorldScene.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="SlotMachineLayer.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameCommon\BaseFunc.cpp">
+      <Filter>GameCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="SlotMachineData.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
   </ItemGroup>

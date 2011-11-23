@@ -6,8 +6,8 @@
 #include "Box2D/Box2D.h"
 
 #include "SimpleAudioEngine.h"
+class SlotMachineLayer;
 
-#define LABEL_COUNT 5
 class HelloWorld : public cocos2d::CCLayer
 {
 public:
@@ -22,16 +22,8 @@ public:
 
     // implement the "static node()" method manually
     LAYER_NODE_FUNC(HelloWorld);
-
-	void update(cocos2d::ccTime dt);
 private:
-	cocos2d::CCSprite* m_labelBg[LABEL_COUNT];
-	cocos2d::CCLabelTTF* m_label[LABEL_COUNT];
-	cocos2d::CCSprite* m_focusLabel;
-	bool m_startRand;
-	float m_curSpeed;
-	float m_curAcc;
-	int m_startTime;
+	SlotMachineLayer* m_slotMachineLayer;
 };
 
 #endif  // __HELLOWORLD_SCENE_H__

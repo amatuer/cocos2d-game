@@ -128,14 +128,20 @@
     <ResourceCompile Include="win32\SlotMachine.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\GameCommon\BaseFunc.h" />
     <ClInclude Include="Classes\AppDelegate.h" />
     <ClInclude Include="Classes\HelloWorldScene.h" />
+    <ClInclude Include="SlotMachineData.h" />
+    <ClInclude Include="SlotMachineLayer.h" />
     <ClInclude Include="win32\main.h" />
     <ClInclude Include="win32\resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\GameCommon\BaseFunc.cpp" />
     <ClCompile Include="Classes\AppDelegate.cpp" />
     <ClCompile Include="Classes\HelloWorldScene.cpp" />
+    <ClCompile Include="SlotMachineData.cpp" />
+    <ClCompile Include="SlotMachineLayer.cpp" />
     <ClCompile Include="win32\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
