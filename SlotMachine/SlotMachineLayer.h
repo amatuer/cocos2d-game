@@ -10,11 +10,11 @@
 
 #define kLabelTopStart  480.0f
 #define kLabelBottomEnd  0.0f
-#define kLabelLineSpace	60.0f
-#define kLabelLeft  80.0f
+#define kLabelLineSpace	30.0f
+#define kLabelHeight  90.0f
 
 #define kAcc 0.3f
-#define kMaxSpeed 1.0f
+#define kMaxSpeed 15.0f
 
 enum {
 	SPEED_NONE,	// ¾²Ö¹

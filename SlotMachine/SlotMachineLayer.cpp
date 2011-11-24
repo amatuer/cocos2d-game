@@ -33,7 +33,7 @@ bool SlotMachineLayer::init(float x, float y, float width, float height)
 
 		CCSize size = bg->getContentSize();
 		bg->setScaleX(width / size.width);
-		bg->setScaleY(0.8f);
+		bg->setScaleY(kLabelHeight / size.height);
 
 		NameLabel label;
 		label.bg = bg;
@@ -45,13 +45,14 @@ bool SlotMachineLayer::init(float x, float y, float width, float height)
 
 		m_labelPos[i] = pt;
 
-		top -= size.height / 2 + kLabelLineSpace;
+		top -= kLabelHeight + kLabelLineSpace;
 	}
 
 	m_focusLabel = CCSprite::spriteWithFile("sm/labelbgf.png");
 	if (m_focusLabel) {
-		m_focusLabel->setScaleX(width / m_focusLabel->getContentSize().width);
-		m_focusLabel->setScaleY(0.8f);
+		CCSize size = m_focusLabel->getContentSize();
+		m_focusLabel->setScaleX(width / size.width);
+		m_focusLabel->setScaleY(kLabelHeight / size.height);
 		m_focusLabel->setPosition(ccp(winSize.width / 2, winSize.height / 2));
 		m_focusLabel->setOpacity(0);
 		this->addChild(m_focusLabel, 1);
@@ -60,6 +61,7 @@ bool SlotMachineLayer::init(float x, float y, float width, float height)
 	m_speedState = SPEED_NONE;
 
 	this->scheduleUpdate();
+
 	return true;
 }
 
@@ -80,8 +82,9 @@ void SlotMachineLayer::start()
 
 void SlotMachineLayer::modifyPos()
 {
-	for (std::deque<NameLabel>::iterator itr = m_allLabel.begin(); itr != m_allLabel.end(); ++itr) {
-		itr->modifyPos(m_labelPos[itr - m_allLabel.begin()]);
+	int amount = m_allLabel.size();
+	for (int i = 0; i < amount - 1; ++i) {
+		m_allLabel[i].modifyPos(m_labelPos[i + 1]);
 	}
 
 	m_focusLabel->setOpacity(0);
@@ -125,8 +128,10 @@ void SlotMachineLayer::update(cocos2d::ccTime dt)
 
 	NameLabel lastLabel = m_allLabel[kLabelCount - 1];
 	CCPoint pt = lastLabel.getPosition();
-	if (pt.y < m_labelPos[kLabelCount - 1].y) {
-		pt.y = m_labelPos[0].y;
+	CCPoint pt1 = m_allLabel[0].getPosition();
+	CCPoint pt2 = m_labelPos[1];
+	if (pt1.y <= pt2.y) {
+		pt.y = kLabelTopStart;
 		lastLabel.setPosition(pt);
 		lastLabel.text->setString(SlotMachineData::instance().getRandomName(m_allLabel[0].text->getString(), m_allLabel[1].text->getString()).c_str());
 		m_allLabel.pop_back();
