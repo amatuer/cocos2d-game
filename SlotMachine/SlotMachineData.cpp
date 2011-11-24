@@ -5,7 +5,8 @@
 
 SlotMachineData::SlotMachineData()
 {
-
+	m_curIndex = 0;
+	m_autoStopTime = 0;
 }
 
 SlotMachineData::~SlotMachineData()
@@ -15,7 +16,7 @@ SlotMachineData::~SlotMachineData()
 
 void SlotMachineData::createDataListByNumber(int start, int end, const char* strStart, const char* strEnd)
 {
-	if (start < end) {
+	if (start > end) {
 		std::swap(start, end);
 	}
 

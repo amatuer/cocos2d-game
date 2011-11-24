@@ -1,4 +1,5 @@
 #include "BaseFunc.h"
+#include <windows.h>
 
 unsigned int getTime()
 {
