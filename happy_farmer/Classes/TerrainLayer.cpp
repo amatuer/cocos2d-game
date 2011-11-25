@@ -100,6 +100,14 @@ void TerrainLayer::draw()
 			ccDrawLine(pt0, pt1);
 			pt0 = pt1;
 		}
+
+		glBindTexture(GL_TEXTURE_2D, );
+		glDisableClientState(GL_COLOR_ARRAY);
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glVertexPointer(2, GL_FLOAT, 0, m_hillVertices);
+		glTexCoordPointer(2, GL_FLOAT, 0, m_hillTexCoords);
+		glDrawArrays(GL_TRIANGL_STRIP, 0, (GLSizei)m_hillVerticNum);
 	}
 }
 
@@ -117,4 +125,45 @@ void TerrainLayer::resetHillVertices()
 	while (m_hillKeyPoints[m_toKeyPointIndex + 1].x < m_offsetX + winSize.width * 3 / 2 / getScale()) {
 		++m_toKeyPointIndex;
 	}
+
+	m_borderVerticNum = 0;
+	m_hillVerticNum = 0;
+	CCPoint p0, p1, pt0, pt1;
+
+	p0 = m_hillKeyPoints[m_fromKeyPointIndex];
+	for (int i = m_fromKeyPointIndex + 1; i < m_toKeyPointIndex + 1; ++i) {
+		p1 = m_hillKeyPoints[i];
+
+		int hSegments = floor((p1.x - p0.x) / kHillSegmentWidth);
+		float dx = (p1.x - p0.x) / hSegments;
+		float da = (float)M_PI / hSegments;
+		float ymid = (p0.y + p1.y) / 2;
+		float ampl = (p0.y - p1.y) / 2;
+		pt0 = p0;
+
+		m_borderVertices[m_borderVerticNum++] = pt0;
+		for (int j = 1; j < hSegments + 1; ++j) {
+			pt1.x = p0.x + j * dx;
+			pt1.y = ymid + ampl * cosf(da * j);
+
+			m_borderVertices[m_borderVerticNum++] = pt1;
+
+			m_hillVertices[m_hillVerticNum] = ccp(pt0.x, 0);
+			m_hillTexCoords[m_hillVerticNum++] = ccp(pt0.x / 512, 1.0f);
+			m_hillVertices[m_hillVerticNum] = ccp(pt1.x, 0);
+			m_hillTexCoords[m_hillVerticNum++] = cpp(pt1.x / 512, 1.0f);
+
+			m_hillVertices[m_hillVerticNum] = ccp(pt0.x, pt0.y);
+			m_hillTexCoords[m_hillVerticNum++] = ccp(pt0.x / 512, 0.0f);
+			m_hillVertices[m_hillVerticNum] = ccp(pt1.x, pt1.y);
+			m_hillTexCoords[m_hillVerticNum++] = cpp(pt1.x / 512, 0.0f);
+
+			pt0 = pt1;
+		}
+
+		p0 = p1;
+	}
+
+	prevFromKeyPointIndex = m_fromKeyPointIndex;
+	preToKeyPointIndex = m_toKeyPointIndex;
 }

@@ -2,6 +2,9 @@
 
 #include "cocos2d.h"
 
+#define kMaxHillVertices 4000
+#define kMaxBorderVertices 800
+
 class TerrainLayer : public cocos2d::CCLayer
 {
 public:
@@ -19,6 +22,13 @@ private:
 	int m_fromKeyPointIndex;
 	int m_toKeyPointIndex;
 	std::vector<cocos2d::CCPoint> m_hillKeyPoints;
+
+	int m_hillVerticNum;
+	cocos2d::CCPoint m_hillVertices[kMaxHillVertices];
+	cocos2d::CCPoint m_hillTexCoords[kMaxHillVertices];
+
+	int m_borderVerticNum;
+	cocos2d::CCPoint m_borderVertices[kMaxBorderVertices];
 
 	void genHillKeyPoints(int maxNumber);
 	void resetHillVertices();
