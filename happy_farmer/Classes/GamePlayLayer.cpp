@@ -88,9 +88,9 @@ void GamePlayLayer::ccTouchEnded(cocos2d::CCTouch * touch, cocos2d::CCEvent * ev
 void GamePlayLayer::update(ccTime dt)
 {
 	if (m_acc == -1) {
-		setOffsetX(m_heroOffsetX + 5);
-	} else if (m_acc == 1) {
 		setOffsetX(m_heroOffsetX - 5);
+	} else if (m_acc == 1) {
+		setOffsetX(m_heroOffsetX + 5);
 	}
 }
 

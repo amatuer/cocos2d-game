@@ -12,7 +12,14 @@ public:
 	void menuCallbackStage(CCObject* pSender);
 
 	void setOffsetX(int offsetX);
+	void draw();
 private:
 	int m_acc;
-	int m_heroOffsetX;
+	int m_offsetX;
+	int m_fromKeyPointIndex;
+	int m_toKeyPointIndex;
+	std::vector<cocos2d::CCPoint> m_hillKeyPoints;
+
+	void genHillKeyPoints(int maxNumber);
+	void resetHillVertices();
 };

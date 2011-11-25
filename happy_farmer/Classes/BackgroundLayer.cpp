@@ -82,6 +82,6 @@ void BackgroundLayer::setOffsetX(int offsetX)
 	
 	CCNode* voidNode = this->getChildByTag(1);
 	CCPoint pt = voidNode->getPosition();
-	pt.x = (float)m_heroOffsetX;
+	pt.x = (float)-m_heroOffsetX;
 	voidNode->setPosition(pt);
 }
