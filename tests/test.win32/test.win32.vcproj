@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libcocos2d.lib libgles_cm.lib libBox2d.lib libchipmunk.lib libcurl_imp.lib"
+				AdditionalDependencies="libcocos2d.lib libgles_cm.lib libBox2d.lib libcurl_imp.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;"
@@ -140,7 +140,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libcocos2d.lib libgles_cm.lib libBox2d.lib libchipmunk.lib libcurl_imp.lib"
+				AdditionalDependencies="libcocos2d.lib libgles_cm.lib libBox2d.lib libcurl_imp.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;"
@@ -516,106 +516,6 @@
 					</File>
 					<File
 						RelativePath="..\tests\RenderTextureTest\RenderTextureTest.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="ChipmunkTest"
-					>
-					<File
-						RelativePath="..\tests\ChipmunkTest\Bounce.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\ChipmunkDemo.h"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\cocos2dChipmunkDemo.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\cocos2dChipmunkDemo.h"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\drawSpace.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\drawSpace.h"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\Joints.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\LogoSmash.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\MagnetsElectric.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\OneWay.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\Planet.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\Player.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\Plink.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\Pump.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\PyramidStack.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\PyramidTopple.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\Query.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\Sensors.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\Simple.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\Springies.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\Tank.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\TheoJansen.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\Tumble.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\tests\ChipmunkTest\UnsafeOps.cpp"
 						>
 					</File>
 				</Filter>
