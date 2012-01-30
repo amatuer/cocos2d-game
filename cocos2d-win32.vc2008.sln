@@ -35,6 +35,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "happy_farmer.win32", "happy
 		{F8EDD7FA-9A51-4E80-BAEB-860825D2EAC6} = {F8EDD7FA-9A51-4E80-BAEB-860825D2EAC6}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FeedSharp.win32", "FeedSharp\FeedSharp.win32.vcproj", "{4C658A15-9366-40A4-A72D-B3FF74E3E4D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -73,6 +75,10 @@ Global
 		{9C4A973E-76C8-4999-B2B8-880456132804}.Debug|Win32.Build.0 = Debug|Win32
 		{9C4A973E-76C8-4999-B2B8-880456132804}.Release|Win32.ActiveCfg = Release|Win32
 		{9C4A973E-76C8-4999-B2B8-880456132804}.Release|Win32.Build.0 = Release|Win32
+		{4C658A15-9366-40A4-A72D-B3FF74E3E4D6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4C658A15-9366-40A4-A72D-B3FF74E3E4D6}.Debug|Win32.Build.0 = Debug|Win32
+		{4C658A15-9366-40A4-A72D-B3FF74E3E4D6}.Release|Win32.ActiveCfg = Release|Win32
+		{4C658A15-9366-40A4-A72D-B3FF74E3E4D6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
