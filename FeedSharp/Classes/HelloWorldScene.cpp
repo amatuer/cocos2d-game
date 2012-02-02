@@ -1,6 +1,13 @@
 #include "HelloWorldScene.h"
+#include <stdio.h>
 
 using namespace cocos2d;
+
+enum {
+	TAG_LABLE_WIND,
+	TAG_LABLE_CUR_POINT,
+	TAG_LABLE_MAX_POINT,
+};
 
 CCScene* HelloWorld::scene()
 {
@@ -35,10 +42,10 @@ bool HelloWorld::init()
 
         CC_BREAK_IF(! CCLayer::init());
 
-		CCSprite *sprite = CCSprite::spriteWithFile("bg.png");
-		sprite->setAnchorPoint(CCPointZero);
-		sprite->setPosition(CCPointMake(0,0));
-		addChild(sprite,-1);
+// 		CCSprite *sprite = CCSprite::spriteWithFile("bg.png");
+// 		sprite->setAnchorPoint(CCPointZero);
+// 		sprite->setPosition(CCPointMake(0,0));
+// 		addChild(sprite,-1);
 
         CCMenuItemImage *pCloseItem = CCMenuItemImage::itemFromNormalImage(
             "CloseNormal.png",
@@ -59,22 +66,43 @@ bool HelloWorld::init()
 		CC_BREAK_IF(! m_pBall);
 		CCSize size = CCDirector::sharedDirector()->getWinSize();
 		m_pBall->setPosition(ccp(size.width / 2, 50));
-		this->addChild(m_pBall, 0);
+		this->addChild(m_pBall, 10);
 
 		// 
-		m_pSharp = CCSprite::spriteWithFile("Sharp.png");
+		m_pSharp = CCSprite::spriteWithFile("tong1.png");
 		CC_BREAK_IF(! m_pSharp);
-
-		m_pSharp->setPosition(ccp(size.width / 2, size.height / 2));
+		m_pSharp->setPosition(ccp(size.width / 2, 300));
 		this->addChild(m_pSharp, 1);
+
+		// 
+		m_pWind = CCSprite::spriteWithFile("wind.png");
+		CC_BREAK_IF(! m_pWind);
+		this->addChild(m_pWind, 1);
+
+		//
+		CCLabelAtlas* labelWind = CCLabelAtlas::labelWithString("0m/min", "fonts/tuffy_bold_italic-charmap-small.png", 24, 32, ' ');
+		addChild(labelWind, 1, TAG_LABLE_WIND);
+		labelWind->setScale(0.5);
+
+		//
+		CCLabelAtlas* labelCur = CCLabelAtlas::labelWithString("CUR:0", "fonts/tuffy_bold_italic-charmap.png", 48, 64, ' ');
+		labelCur->setScale(0.5);
+		addChild(labelCur, 1, TAG_LABLE_CUR_POINT);
+		labelCur->setPosition(ccp(0, labelCur->getContentSize().height / 2));
 
 		schedule(schedule_selector(HelloWorld::GameLoop));
 		CCTouchDispatcher::sharedDispatcher()->addTargetedDelegate(this, 0, true);
 		m_bReady = true;
 
 		//
-		m_aX = 0.2;
-		m_aY = -0.5;
+		m_nComboTime = 0;
+		m_nCurPoint = 0;
+		m_nMaxPoint = 0;
+		m_aX = 0.4;
+		m_aY = -1;
+
+		srand(305062);
+		SetWind();
 
         bRet = true;
     } while (0);
@@ -90,6 +118,15 @@ void HelloWorld::menuCloseCallback(CCObject* pSender)
 
 void HelloWorld::GameLoop( ccTime delta )
 {
+
+	char szCurrentPoint[32] = {0};
+	sprintf(szCurrentPoint, "CUR:%d", m_nCurPoint);
+	CCLabelAtlas* pLableCur = (CCLabelAtlas*)getChildByTag(TAG_LABLE_CUR_POINT);
+	if (pLableCur)
+	{
+		pLableCur->setString(szCurrentPoint);
+	}
+
 	if (!m_pBall || !m_pSharp || m_bReady)
 	{
 		return;
@@ -108,20 +145,60 @@ void HelloWorld::GameLoop( ccTime delta )
 
 	// 丢出去了就重置
 	CCSize size = CCDirector::sharedDirector()->getWinSize();
-	if (!CCRect::CCRectContainsPoint(CCRectMake(0, 0, size.width, size.height), pntBall))
-	{
-		m_bReady = true;
-		m_pBall->setPosition(ccp(size.width / 2, 50));
-		return;
-	}
-	// 球该落水了~
-	CCPoint pntSharp = m_pSharp->getPosition();
+// 	if (m_vY < 0 && !CCRect::CCRectContainsPoint(CCRectMake(0, 0, size.width, size.height), pntBall))
+// 	{
+// 		SetWind();
+// 		m_bReady = true;
+// 		m_pBall->setPosition(ccp(size.width / 2, 50));
+// 		return;
+// 	}
 
-	if (m_vY < 0  && pntBall.y < pntSharp.y)
+	CCPoint pntSharp = m_pSharp->getPosition();
+	CCSize sizeSharp = m_pSharp->getContentSize();
+
+	if (m_vY < 0)
 	{
-		m_bReady = true;
-		m_pBall->setPosition(ccp(size.width / 2, 50));
-		return;
+		// oh ye!
+		if (CCRect::CCRectContainsPoint(CCRectMake(pntSharp.x - sizeSharp.width / 2, pntSharp.y + sizeSharp.height / 2, sizeSharp.width, 20), pntBall))
+		{
+			SetWind();
+			m_bReady = true;
+			m_pBall->setPosition(ccp(size.width / 2, 50));
+			m_nComboTime++;
+			m_nCurPoint += m_nComboTime;
+
+			CCMutableArray<CCSpriteFrame*>* animFrames = new CCMutableArray<CCSpriteFrame*>;
+
+			char str[64] = {0};
+			for (int i = 1; i < 4; i++)
+			{
+				sprintf(str, "tong%d.png", i);
+				CCTexture2D* texture = CCTextureCache::sharedTextureCache()->addImage(str);
+				CCSpriteFrame* frame = CCSpriteFrame::frameWithTexture(texture, CCRectMake(0, 0, texture->getContentSize().width, texture->getContentSize().height));
+				animFrames->addObject(frame);
+			}
+
+			CCTexture2D* texture = CCTextureCache::sharedTextureCache()->addImage("tong1.png");
+			CCSpriteFrame* frame = CCSpriteFrame::frameWithTexture(texture, CCRectMake(0, 0, texture->getContentSize().width, texture->getContentSize().height));
+			animFrames->addObject(frame);
+			CCAnimation *animation = CCAnimation::animationWithFrames(animFrames, 0.1f);
+			CCAnimate *animate = CCAnimate::actionWithAnimation(animation, false);
+
+			m_pSharp->runAction(animate);
+
+			return;
+		}
+
+		// 球该落水了~
+		if (pntBall.y < pntSharp.y - sizeSharp.height / 2)
+		{
+			SetWind();
+			m_bReady = true;
+			m_pBall->setPosition(ccp(size.width / 2, 50));
+			m_nComboTime = 0;
+			m_nCurPoint = 0;
+			return;
+		}
 	}
 }
 
@@ -140,14 +217,14 @@ bool HelloWorld::ccTouchBegan( CCTouch* touch, CCEvent* event )
 	CCPoint pntBall = m_pBall->getPosition();
 	CCPoint pntTouch = touch->locationInView(touch->view());
 	pntTouch.y = CCDirector::sharedDirector()->getWinSize().height - pntTouch.y;
-	CCRect rectBounding = CCRectMake(pntBall.x - 50, pntBall.y - 50, 100, 100);
+	//CCRect rectBounding = CCRectMake(pntBall.x - 50, pntBall.y - 100, 100, 200);
 	CCRect rect = m_pBall->boundingBox();
-	if (!CCRect::CCRectContainsPoint(rectBounding, pntTouch))
+	if (!CCRect::CCRectContainsPoint(rect, pntTouch))
 	{
 		return false;
 	}
 
-	m_pntBegin = touch->locationInView(touch->view());
+	m_pntBegin = ccp(pntBall.x, CCDirector::sharedDirector()->getWinSize().height - pntBall.y);
 	return true;
 }
 
@@ -177,14 +254,15 @@ void HelloWorld::ccTouchEnded( CCTouch* touch, CCEvent* event )
 		return;
 	}
 
-	if (m_pntEnd.y >= m_pntBegin.y)
+	CCSize size = CCDirector::sharedDirector()->getWinSize();
+	if (m_pntEnd.y >= size.height * 3 / 4)
 	{
 		m_bReady = true;
 		return;
 	}
 
 	// 速度分解
-	const float V = 13;
+	const float V = 29;
 	float fX = m_pntEnd.x - m_pntBegin.x;
 	float fY = m_pntEnd.y - m_pntBegin.y;
 	if (fX >= 0)
@@ -198,5 +276,40 @@ void HelloWorld::ccTouchEnded( CCTouch* touch, CCEvent* event )
 		m_vY = V * sin(fAlpha);
 	}
 	// 上升速度固定
-	m_vY = 15;
+	m_vY = 29;
+}
+
+void HelloWorld::SetWind( void )
+{
+	CCLabelAtlas* pLable = (CCLabelAtlas*)this->getChildByTag(TAG_LABLE_WIND);
+	CC_ASSERT(pLable);
+
+	m_aX = (float)(rand() % 5000) / 10000;
+	int nrand = rand() % 100;
+	if (nrand >= 50)
+	{
+		m_aX = -m_aX;
+	}
+
+	char string[12] = {0};
+	sprintf(string, "%.3f m/s", abs(m_aX) * 10);
+	pLable->setString(string);
+	CCSize sizeLable = pLable->getContentSize();
+
+	CCSize size = CCDirector::sharedDirector()->getWinSize();
+	CCSize sizeWind = m_pWind->getContentSize();
+	m_pWind->setPosition(ccp(sizeWind.width / 2, size.height - sizeWind.height / 2));
+
+	if (m_aX < 0)
+	{
+		m_pWind->setFlipX(true);
+		m_pWind->setPosition(ccp(size.width - sizeWind.width / 2, size.height - sizeWind.height / 2));
+		pLable->setPosition(ccp(size.width - sizeLable.width / 2, 350));
+	}
+	else
+	{
+		m_pWind->setFlipX(false);
+		m_pWind->setPosition(ccp(sizeWind.width / 2, size.height - sizeWind.height / 2));
+		pLable->setPosition(ccp(0, 350));
+	}
 }

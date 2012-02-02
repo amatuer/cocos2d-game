@@ -26,16 +26,23 @@ private:
 	CCPoint m_pntEnd;
 	CCSprite* m_pBall;
 	CCSprite* m_pSharp;
+	CCSprite* m_pWind;
 	float m_vX;
 	float m_vY;
 	float m_aX;
 	FLOAT m_aY;
+
+	int m_nCurPoint;
+	int m_nMaxPoint;
+	int m_nComboTime;
 
 	void GameLoop(ccTime delta);
 
 	virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event);
 	virtual void ccTouchMoved(CCTouch* touch, CCEvent* event);
 	virtual void ccTouchEnded(CCTouch* touch, CCEvent* event);
+
+	void SetWind(void);
 };
 
 #endif  // __HELLOWORLD_SCENE_H__

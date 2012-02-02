@@ -5,7 +5,7 @@
 using namespace CocosDenshion;
 
 
-#include "HelloWorldScene.h"
+#include "loadingscene.h"
 
 using namespace cocos2d;
 
@@ -72,17 +72,17 @@ bool AppDelegate::applicationDidFinishLaunching()
     pDirector->setOpenGLView(&CCEGLView::sharedOpenGLView());
 
     // sets landscape mode
-    pDirector->setDeviceOrientation(kCCDeviceOrientationLandscapeLeft);
+    pDirector->setDeviceOrientation(kCCDeviceOrientationPortrait);
 
     // turn on display FPS
-    pDirector->setDisplayFPS(true);
+    //pDirector->setDisplayFPS(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-    CCScene *pScene = HelloWorld::scene();
-
+	CCScene* pScene = new CLoadingScene();
+	pScene->autorelease();
     // run
     pDirector->runWithScene(pScene);
     return true;
