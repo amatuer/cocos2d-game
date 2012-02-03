@@ -42,10 +42,10 @@ bool HelloWorld::init()
 
         CC_BREAK_IF(! CCLayer::init());
 
-// 		CCSprite *sprite = CCSprite::spriteWithFile("bg.png");
-// 		sprite->setAnchorPoint(CCPointZero);
-// 		sprite->setPosition(CCPointMake(0,0));
-// 		addChild(sprite,-1);
+		CCSprite *sprite = CCSprite::spriteWithFile("bg.png");
+		sprite->setAnchorPoint(CCPointZero);
+		sprite->setPosition(CCPointMake(0,0));
+		addChild(sprite,-1);
 
         CCMenuItemImage *pCloseItem = CCMenuItemImage::itemFromNormalImage(
             "CloseNormal.png",
@@ -89,6 +89,10 @@ bool HelloWorld::init()
 		labelCur->setScale(0.5);
 		addChild(labelCur, 1, TAG_LABLE_CUR_POINT);
 		labelCur->setPosition(ccp(0, labelCur->getContentSize().height / 2));
+		CCLabelAtlas* labelMax = CCLabelAtlas::labelWithString("MAX:0", "fonts/tuffy_bold_italic-charmap.png", 48, 64, ' ');
+		labelMax->setScale(0.5);
+		addChild(labelMax, 1, TAG_LABLE_MAX_POINT);
+		labelMax->setPosition(ccp(0, labelMax->getContentSize().height / 2 + labelCur->getContentSize().height));
 
 		schedule(schedule_selector(HelloWorld::GameLoop));
 		CCTouchDispatcher::sharedDispatcher()->addTargetedDelegate(this, 0, true);
@@ -104,6 +108,10 @@ bool HelloWorld::init()
 		srand(305062);
 		SetWind();
 
+		//
+		m_nMaxPoint = CCUserDefault::sharedUserDefault()->getIntegerForKey("KEY_MAX_POINT", 0);
+
+
         bRet = true;
     } while (0);
 
@@ -118,13 +126,16 @@ void HelloWorld::menuCloseCallback(CCObject* pSender)
 
 void HelloWorld::GameLoop( ccTime delta )
 {
-
 	char szCurrentPoint[32] = {0};
+	char szMaxPoint[32] = {0};
 	sprintf(szCurrentPoint, "CUR:%d", m_nCurPoint);
+	sprintf(szMaxPoint, "MAX:%d", m_nMaxPoint);
 	CCLabelAtlas* pLableCur = (CCLabelAtlas*)getChildByTag(TAG_LABLE_CUR_POINT);
-	if (pLableCur)
+	CCLabelAtlas* pLableMax = (CCLabelAtlas*)getChildByTag(TAG_LABLE_MAX_POINT);
+	if (pLableCur && pLableMax)
 	{
 		pLableCur->setString(szCurrentPoint);
+		pLableMax->setString(szMaxPoint);
 	}
 
 	if (!m_pBall || !m_pSharp || m_bReady)
@@ -132,8 +143,6 @@ void HelloWorld::GameLoop( ccTime delta )
 		return;
 	}
 
-// 	float vx = m_vX + m_aX;
-// 	float vy = m_vY + m_aY;
 	m_vX += m_aX;
 	m_vY += m_aY;
 	CCPoint pntBall = m_pBall->getPosition();
@@ -145,14 +154,6 @@ void HelloWorld::GameLoop( ccTime delta )
 
 	// 丢出去了就重置
 	CCSize size = CCDirector::sharedDirector()->getWinSize();
-// 	if (m_vY < 0 && !CCRect::CCRectContainsPoint(CCRectMake(0, 0, size.width, size.height), pntBall))
-// 	{
-// 		SetWind();
-// 		m_bReady = true;
-// 		m_pBall->setPosition(ccp(size.width / 2, 50));
-// 		return;
-// 	}
-
 	CCPoint pntSharp = m_pSharp->getPosition();
 	CCSize sizeSharp = m_pSharp->getContentSize();
 
@@ -166,6 +167,11 @@ void HelloWorld::GameLoop( ccTime delta )
 			m_pBall->setPosition(ccp(size.width / 2, 50));
 			m_nComboTime++;
 			m_nCurPoint += m_nComboTime;
+			if (m_nCurPoint > m_nMaxPoint)
+			{
+				CCUserDefault::sharedUserDefault()->setIntegerForKey("KEY_MAX_POINT", m_nCurPoint);
+				m_nMaxPoint = m_nCurPoint;
+			}
 
 			CCMutableArray<CCSpriteFrame*>* animFrames = new CCMutableArray<CCSpriteFrame*>;
 
@@ -275,8 +281,9 @@ void HelloWorld::ccTouchEnded( CCTouch* touch, CCEvent* event )
 		m_vX = -V * cos(fAlpha);
 		m_vY = V * sin(fAlpha);
 	}
-	// 上升速度固定
+	// 为了游戏效果，恶心的修正，上升速度固定
 	m_vY = 29;
+	m_vX /= 2;
 }
 
 void HelloWorld::SetWind( void )
