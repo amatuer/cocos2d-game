@@ -198,7 +198,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Classes\HelloWorldScene.cpp"
+				RelativePath=".\Food.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Classes\FoodLayer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Classes\GameLayer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GameMgr.cpp"
 				>
 			</File>
 			<File
@@ -207,6 +219,10 @@
 			</File>
 			<File
 				RelativePath=".\win32\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Classes\UILayer.cpp"
 				>
 			</File>
 		</Filter>
@@ -219,7 +235,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Classes\HelloWorldScene.h"
+				RelativePath=".\Food.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Classes\FoodLayer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Classes\GameLayer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameMgr.h"
 				>
 			</File>
 			<File
@@ -232,6 +260,10 @@
 			</File>
 			<File
 				RelativePath=".\win32\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Classes\UILayer.h"
 				>
 			</File>
 		</Filter>

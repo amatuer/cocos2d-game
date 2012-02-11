@@ -1,12 +1,13 @@
-#ifndef __HELLOWORLD_SCENE_H__
-#define __HELLOWORLD_SCENE_H__
+#ifndef __GAMELAYER_H__
+#define __GAMELAYER_H__
 
 #include "cocos2d.h"
 
 #include "SimpleAudioEngine.h"
+
 USING_NS_CC;
 
-class HelloWorld : public cocos2d::CCLayer
+class CGameLayer : public cocos2d::CCLayer
 {
 public:
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
@@ -19,12 +20,12 @@ public:
     virtual void menuCloseCallback(CCObject* pSender);
 
     // implement the "static node()" method manually
-	LAYER_NODE_FUNC(HelloWorld);
+	LAYER_NODE_FUNC(CGameLayer);
 private:
 	bool m_bReady;
 	CCPoint m_pntBegin;
 	CCPoint m_pntEnd;
-	CCSprite* m_pBall;
+	CCSprite* m_pFood;
 	CCSprite* m_pSharp;
 	CCSprite* m_pWind;
 	float m_vX;
@@ -43,6 +44,7 @@ private:
 	virtual void ccTouchEnded(CCTouch* touch, CCEvent* event);
 
 	void SetWind(void);
+	void SetFood(void);
 };
 
-#endif  // __HELLOWORLD_SCENE_H__
+#endif  // __GAMELAYER_H__
