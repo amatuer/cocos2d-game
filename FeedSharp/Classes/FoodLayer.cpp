@@ -47,7 +47,7 @@ bool CFoodLayer::init()
 			szNormal,
 			szSelected,
 			this,
-			menu_selector(CFoodLayer::menuCloseCallback) );
+			menu_selector(CFoodLayer::ChooseFoodCallback) );
 		pCloseItem->setPosition( ccp(CCDirector::sharedDirector()->getWinSize().width - 20, 20) );
 		CCMenu* pMenu = CCMenu::menuWithItems(pCloseItem, NULL);
 		pMenu->setPosition( ccp(0, 40 + 40 * i) );
@@ -60,13 +60,17 @@ bool CFoodLayer::init()
 	return true;
 }
 
-void CFoodLayer::menuCloseCallback( CCObject* pSender )
+void CFoodLayer::ChooseFoodCallback( CCObject* pSender )
 {
 	CCNode* pNode = (CCNode*)pSender;
+	CCNode* pParent = pNode->getParent();
 
-	int nTag = pNode->getTag();
+	if (pParent)
+	{
+		int nTag = pParent->getTag();
+		CGameMgr::Instance()->SetCurrentFoodType(nTag);
+	}
 
-	CGameMgr::Instance()->SetCurrentFoodType(nTag);
 	this->setIsVisible(false);
 }
 

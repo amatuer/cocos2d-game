@@ -7,6 +7,7 @@ CFoodMgr::CFoodMgr(void)
 
 CFoodMgr::~CFoodMgr(void)
 {
+	m_mapFoodData.clear();
 }
 
 CFoodMgr* CFoodMgr::Instance()
@@ -28,30 +29,60 @@ CFoodMgr* CFoodMgr::Instance()
 
 float CFoodMgr::GetVelocity( int nType )
 {
-	return 29;
+	if (m_mapFoodData.size())
+	{
+		return m_mapFoodData[nType].fVelocity;
+	}
+
+	return 0;
 }
 
-float CFoodMgr::GetAX( int nType )
+float CFoodMgr::GetVXRate( int nType )
 {
+	if (m_mapFoodData.size())
+	{
+		return m_mapFoodData[nType].fVXRate;
+	}
 	return 0;
 }
 
 float CFoodMgr::GetAY( int nType )
 {
+	if (m_mapFoodData.size())
+	{
+		return m_mapFoodData[nType].fAY;
+	}
 	return -1;
 }
 
 int CFoodMgr::GetFoodAmount( void )
 {
-	return 3;
-}
-
-std::string CFoodMgr::GetFoodTitle(int nType)
-{
-	return "food";
+	return m_mapFoodData.size();
 }
 
 int CFoodMgr::GetFoodFrameAmount( int nType )
 {
 	return 1;
+}
+
+void CFoodMgr::InitFoodData( void )
+{
+	if (m_mapFoodData.size())
+	{
+		return;
+	}
+
+	FOOD_ATTRIB_INFO info;
+
+	info.fVelocity = 29;
+	info.fVXRate = 1;
+	info.fAY = -1;
+
+	m_mapFoodData[0] = info;
+
+	info.fVXRate = 1.25;
+	m_mapFoodData[1] = info;
+
+	info.fVXRate = 0.5;
+	m_mapFoodData[2] = info;
 }

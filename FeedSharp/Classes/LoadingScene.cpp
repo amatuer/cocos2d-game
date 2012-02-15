@@ -1,5 +1,6 @@
 #include "LoadingScene.h"
 #include "GameLayer.h"
+#include "GameMgr.h"
 
 CLoadingScene::CLoadingScene(void)
 {
@@ -40,6 +41,9 @@ void CLoadingScene::onEnter()
 		labelTitle->setPosition(ccp(s.width / 2, s.height / 2));
 		addChild(labelTitle);
 	}
+
+	// init data
+	CGameMgr::Instance()->SetMaxFood(50);
 }
 
 void CLoadingScene::StartGameCallback( CCObject* pSender )

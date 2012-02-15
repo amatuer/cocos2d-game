@@ -3,6 +3,7 @@
 
 CGameMgr::CGameMgr(void)
 {
+	m_nCurrentFoodType = 0;
 }
 
 CGameMgr::~CGameMgr(void)

@@ -20,5 +20,5 @@ public:
 	void update(cocos2d::ccTime dt);
 
 	// a selector callback
-	virtual void menuCloseCallback(CCObject* pSender);
+	virtual void ChooseFoodCallback(CCObject* pSender);
 };

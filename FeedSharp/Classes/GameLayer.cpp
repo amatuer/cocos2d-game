@@ -62,10 +62,12 @@ bool CGameLayer::init()
 		// add by wang fei
 		m_bReady = false;
 
-		int nType = CGameMgr::Instance()->GetCurrentFoodType();
-		std::string strTitle = CFoodMgr::Instance()->GetFoodTitle(nType) + "0.png";
+		m_nFoodType = CGameMgr::Instance()->GetCurrentFoodType();
+		char szFile[64] = {0};
+		sprintf(szFile, "Food%d.png", m_nFoodType);
+		szFile[sizeof(szFile) - 1] = 0;
 
-		m_pFood = CCSprite::spriteWithFile(strTitle.c_str());
+		m_pFood = CCSprite::spriteWithFile(szFile);
 		CC_BREAK_IF(! m_pFood);
 		CCSize size = CCDirector::sharedDirector()->getWinSize();
 		m_pFood->setPosition(ccp(size.width / 2, 50));
@@ -105,9 +107,10 @@ bool CGameLayer::init()
 		m_nComboTime = 0;
 		m_nCurPoint = 0;
 		m_nMaxPoint = 0;
+		m_nLeftFood = CGameMgr::Instance()->GetMaxFood();
 		m_aX = 0.0;
 //		m_aY = -1;
-		m_aY = CFoodMgr::Instance()->GetAY(nType);
+		m_aY = CFoodMgr::Instance()->GetAY(m_nFoodType);
 
 		srand(305062);
 		SetWind();
@@ -142,6 +145,11 @@ void CGameLayer::GameLoop( ccTime delta )
 		pLableMax->setString(szMaxPoint);
 	}
 
+	if (m_bReady)
+	{
+		CheckFoodType();
+	}
+
 	if (!m_pFood || !m_pSharp || m_bReady)
 	{
 		return;
@@ -151,7 +159,7 @@ void CGameLayer::GameLoop( ccTime delta )
 	m_vY += m_aY;
 	CCPoint pntBall = m_pFood->getPosition();
 	
-	pntBall.x += m_vX;
+	pntBall.x += m_vX * CFoodMgr::Instance()->GetVXRate(m_nFoodType);
 	pntBall.y += m_vY;
 
 	m_pFood->setPosition(pntBall);
@@ -278,9 +286,8 @@ void CGameLayer::ccTouchEnded( CCTouch* touch, CCEvent* event )
 		return;
 	}
 
-	int nType = CGameMgr::Instance()->GetCurrentFoodType();
 	// 速度分解
-	const float V = CFoodMgr::Instance()->GetVelocity(nType);
+	const float V = CFoodMgr::Instance()->GetVelocity(m_nFoodType);
 	float fX = m_pntEnd.x - m_pntBegin.x;
 	float fY = m_pntEnd.y - m_pntBegin.y;
 	if (fX >= 0)
@@ -295,7 +302,7 @@ void CGameLayer::ccTouchEnded( CCTouch* touch, CCEvent* event )
 	}
 	// 为了游戏效果，恶心的修正，上升速度固定
 	m_vY = V;
-	m_vX /= 2;
+	m_vX *= 0.5;
 }
 
 void CGameLayer::SetWind( void )
@@ -336,4 +343,19 @@ void CGameLayer::SetWind( void )
 void CGameLayer::SetFood( void )
 {
 	//m_CurFood.setType(E_FOOD_SMALL_FISH);
+}
+
+void CGameLayer::CheckFoodType( void )
+{
+	if (m_nFoodType != CGameMgr::Instance()->GetCurrentFoodType())
+	{
+		m_nFoodType = CGameMgr::Instance()->GetCurrentFoodType();
+
+		char szFile[64] = {0};
+		sprintf(szFile, "Food%d.png", m_nFoodType);
+		szFile[sizeof(szFile) - 1] = 0;
+
+		CCTexture2D* text = CCTextureCache::sharedTextureCache()->addImage(szFile);
+		m_pFood->setTexture(text);
+	}
 }

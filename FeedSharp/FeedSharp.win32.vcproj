@@ -214,6 +214,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Classes\GameResult.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Classes\LoadingScene.cpp"
 				>
 			</File>
@@ -248,6 +252,10 @@
 			</File>
 			<File
 				RelativePath=".\GameMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Classes\GameResult.h"
 				>
 			</File>
 			<File

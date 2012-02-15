@@ -32,10 +32,12 @@ private:
 	float m_vY;
 	float m_aX;
 	FLOAT m_aY;
+	int m_nFoodType;
 
 	int m_nCurPoint;
 	int m_nMaxPoint;
 	int m_nComboTime;
+	int m_nLeftFood;
 
 	void GameLoop(ccTime delta);
 
@@ -45,6 +47,7 @@ private:
 
 	void SetWind(void);
 	void SetFood(void);
+	void CheckFoodType(void);
 };
 
 #endif  // __GAMELAYER_H__
